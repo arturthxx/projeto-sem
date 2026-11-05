@@ -25,7 +25,7 @@ clone() {  # clone <url> <tag> <dir>
   local url="$1" tag="$2" dir="$BH/$3"
   if [ ! -f "$dir/.sem_tag" ] || [ "$(cat "$dir/.sem_tag")" != "$tag" ]; then
     rm -rf "$dir"
-    git clone --quiet --depth 1 -b "$tag" "$url" "$dir"
+    git -c advice.detachedHead=false clone --quiet --depth 1 -b "$tag" "$url" "$dir"
     echo "$tag" > "$dir/.sem_tag"
   fi
 }

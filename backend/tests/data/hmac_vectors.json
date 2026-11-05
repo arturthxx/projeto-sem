@@ -1,0 +1,66 @@
+{
+  "description": "Vetores de teste cruzado HMAC-SHA256 dos comandos sem.cmd.v1 (docs/05 §7). HMAC sobre os bytes UTF-8 exatos de 'payload'. Chave PUBLICA de teste.",
+  "algorithm": "HMAC-SHA256",
+  "key_utf8": "sem-test-key-NAO-USAR-EM-PRODUCAO",
+  "key_hex": "73656d2d746573742d6b65792d4e414f2d555341522d454d2d50524f445543414f",
+  "vectors": [
+    {
+      "name": "set_mode_rules",
+      "payload": "{\"schema\":\"sem.cmd.v1\",\"id\":\"v-0001\",\"ts_ms\":1763290800000,\"ttl_s\":60,\"type\":\"set_mode\",\"args\":{\"mode\":\"rules\"}}",
+      "hmac": "ed3b223af85e0add24ed922dd008318b8cdd1366085dee94aa93e5fbec412f7c",
+      "valid": true
+    },
+    {
+      "name": "set_mode_predictive",
+      "payload": "{\"schema\":\"sem.cmd.v1\",\"id\":\"v-0002\",\"ts_ms\":1763290800000,\"ttl_s\":60,\"type\":\"set_mode\",\"args\":{\"mode\":\"predictive\"}}",
+      "hmac": "9122800c81d81e2deb76242416b7359b62058727d9bdf1a7f6bfef365fa18acf",
+      "valid": true
+    },
+    {
+      "name": "set_loads",
+      "payload": "{\"schema\":\"sem.cmd.v1\",\"id\":\"v-0003\",\"ts_ms\":1763290800000,\"ttl_s\":1200,\"type\":\"set_loads\",\"args\":{\"loads\":[{\"id\":1,\"on\":true,\"duty\":1.0},{\"id\":2,\"on\":true,\"duty\":0.6},{\"id\":3,\"on\":false,\"duty\":0.0}]}}",
+      "hmac": "797ef68716af5fa24a9ee1cc6b3cbcdf32e373c70cfa77bec6bdeaf8410cac45",
+      "valid": true
+    },
+    {
+      "name": "sync_soc",
+      "payload": "{\"schema\":\"sem.cmd.v1\",\"id\":\"v-0004\",\"ts_ms\":1763290800000,\"ttl_s\":60,\"type\":\"sync_soc\",\"args\":{\"soc\":1.0}}",
+      "hmac": "7f50282262e35384cf0f86e5fbb52f09f3852cccb23859e317a538cb0d4f58e9",
+      "valid": true
+    },
+    {
+      "name": "reset_faults",
+      "payload": "{\"schema\":\"sem.cmd.v1\",\"id\":\"v-0005\",\"ts_ms\":1763290800000,\"ttl_s\":60,\"type\":\"reset_faults\",\"args\":{}}",
+      "hmac": "5b2912521605579fad01d3973d7bbe330dc78bd2c5ecc52ba08a638e478105dc",
+      "valid": true
+    },
+    {
+      "name": "hmac_alterado",
+      "payload": "{\"schema\":\"sem.cmd.v1\",\"id\":\"v-0001\",\"ts_ms\":1763290800000,\"ttl_s\":60,\"type\":\"set_mode\",\"args\":{\"mode\":\"rules\"}}",
+      "hmac": "ed3b223af85e0add24ed922dd008318b8cdd1366085dee94aa93e5fbec412f70",
+      "valid": false,
+      "expect": "hmac"
+    },
+    {
+      "name": "payload_com_espaco",
+      "payload": "{\"schema\":\"sem.cmd.v1\", \"id\":\"v-0001\",\"ts_ms\":1763290800000,\"ttl_s\":60,\"type\":\"set_mode\",\"args\":{\"mode\":\"rules\"}}",
+      "hmac": "ed3b223af85e0add24ed922dd008318b8cdd1366085dee94aa93e5fbec412f7c",
+      "valid": false,
+      "expect": "hmac"
+    },
+    {
+      "name": "hmac_maiusculo",
+      "payload": "{\"schema\":\"sem.cmd.v1\",\"id\":\"v-0001\",\"ts_ms\":1763290800000,\"ttl_s\":60,\"type\":\"set_mode\",\"args\":{\"mode\":\"rules\"}}",
+      "hmac": "ED3B223AF85E0ADD24ED922DD008318B8CDD1366085DEE94AA93E5FBEC412F7C",
+      "valid": false,
+      "expect": "envelope"
+    },
+    {
+      "name": "duty_fora_da_faixa",
+      "payload": "{\"schema\":\"sem.cmd.v1\",\"id\":\"v-0006\",\"ts_ms\":1763290800000,\"ttl_s\":60,\"type\":\"set_loads\",\"args\":{\"loads\":[{\"id\":2,\"on\":true,\"duty\":1.5}]}}",
+      "hmac": "b04244a4a95ad5ba26ae11a29fd2137ffd17ba2d4068ebd3ee1f65030b9cec9d",
+      "valid": false,
+      "expect": "schema"
+    }
+  ]
+}
