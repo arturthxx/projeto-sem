@@ -1,0 +1,1900 @@
+[
+ {
+  "key": "controladores",
+  "findings": [
+   {
+    "topic": "Victron SmartSolar MPPT 75/10 e 75/15",
+    "item": "Tensão máxima FV (Voc), corrente de carga e potência FV nominal",
+    "claim": "Os dois modelos aceitam no máximo 75 V de tensão FV de circuito aberto. A corrente nominal de carga é 10 A no 75/10 e 15 A no 75/15. A potência FV nominal em 12 V é 145 W no 75/10 e 220 W no 75/15; em 24 V, 290 W e 440 W. A tensão de bateria 12/24 V é selecionada automaticamente. Para um painel de ~50 W em 12 V, os dois modelos sobram.",
+    "sources": [
+     "https://www.victronenergy.com/media/pg/Manual_SmartSolar_MPPT_75-10_up_to_100-20/en/technical-specifications.html",
+     "https://www.victronenergy.com/upload/documents/Datasheet-SmartSolar-charge-controller-MPPT-75-10,-75-15,-100-15,-100-20_48V-EN.pdf",
+     "https://www.victronenergy.de/upload/documents/Certificaat-Veiligheid-EN-IEC-62109-1-MPPT-75-10-&-75-15.pdf",
+     "https://www.victronenergy.com/solar-charge-controllers/smartsolar-mppt-75-10-75-15-100-15-100-20"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "WebFetch para victronenergy.com falhou (domínio fora da rede permitida). Os valores vêm dos trechos de busca do datasheet/manual oficiais e do certificado IEC 62109-1. Há conflito na corrente de curto-circuito FV do 75/10: 10 A no manual e 13 A no datasheet."
+   },
+   {
+    "topic": "Victron SmartSolar MPPT 75/10 e 75/15",
+    "item": "Topologia (MPPT verdadeiro, buck, não isolado)",
+    "claim": "O controlador só opera com tensão FV acima da tensão da bateria. Para partir, precisa de Vpv > Vbat + 5 V; depois de ligado, opera até Vpv mínimo = Vbat + 1 V. A Victron declara o MPPT como não isolado, com o negativo da entrada FV no mesmo potencial do negativo da bateria. Esse comportamento é o de um conversor abaixador (buck) não isolado. A Victron também recomenda Vmp ≥ 2×Vbat para maximizar o ganho do MPPT. Com bateria entre 12,8 e 14,2 V, a partida exige Voc do painel de aproximadamente 17,8 a 19,2 V.",
+    "sources": [
+     "https://www.victronenergy.com/live/drafts:mppt_faq",
+     "https://cdn.shopify.com/s/files/1/0260/8234/5022/files/Victron-Manual-BlueSolar-charge-controller-MPPT-100-30---100-50-Rev-10-EN-NL-FR-DE-ES-SE.pdf",
+     "https://solaronline.ca/wp-content/uploads/2023/10/Manual_Victron_Energy_SmartSolar-MPPT-150-35.pdf",
+     "https://community.victronenergy.com/t/5v-voltage-difference-for-mppt-needed-for-startup-or-normal-operation/59858"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "A regra Vbat+5 V / Vbat+1 V aparece nos manuais de modelos irmãos (100/30, 100/50, 150/35), em cópias hospedadas por terceiros. O termo 'buck' é inferência técnica e não aparece literalmente nas fontes. O FAQ que declara o MPPT não isolado está em victronenergy.com, mas é uma página 'drafts'. Com painel de 36 células, o ganho do MPPT sobre um PWM tende a ser pequeno porque Vmp fica longe de 2×Vbat."
+   },
+   {
+    "topic": "Victron SmartSolar MPPT 75/10 e 75/15",
+    "item": "Eficiência máxima e autoconsumo",
+    "claim": "A eficiência de pico é 98% nos quatro modelos da família (75/10, 75/15, 100/15, 100/20). Segundo o resumo de busca do datasheet oficial, o autoconsumo do 75/10 e do 75/15 é de cerca de 19 mA (12 V) / 16 mA (24 V) com a saída LOAD ligada e de cerca de 10 mA (12 V) / 8 mA (24 V) com a LOAD desligada.",
+    "sources": [
+     "https://www.victronenergy.com/upload/documents/Datasheet-SmartSolar-charge-controller-MPPT-75-10,-75-15,-100-15,-100-20_48V-EN.pdf",
+     "https://www.victronenergy.com/media/pg/Manual_SmartSolar_MPPT_75-10_up_to_100-20/en/technical-specifications.html",
+     "https://www.eshops.gr/en/?p=6083"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "A eficiência de 98% está confirmada em mais de uma fonte. Os valores de autoconsumo vieram só de um resumo do mecanismo de busca sobre o PDF oficial, que não pude abrir. Ver open_issues."
+   },
+   {
+    "topic": "Victron SmartSolar MPPT 75/10 e 75/15",
+    "item": "Preset LiFePO4 (absorção/flutuação)",
+    "claim": "O preset de lítio (LiFePO4) do manual 75/10–100/20 usa absorção de 14,2 V em 12 V (28,4 V em 24 V) com tempo fixo de 2 h. A corrente de cauda é 0 A, para usar o tempo todo no balanceamento. Equalização e compensação de temperatura vêm desabilitadas. A flutuação aparece como 13,2 V na tabela de presets e como 13,5 V em outro trecho de texto da mesma família de manuais. A Victron diz que os valores podem ser ajustados conforme o fabricante da bateria.",
+    "sources": [
+     "https://www.victronenergy.com/media/pg/Manual_SmartSolar_MPPT_75-10_up_to_100-20/en/operation.html",
+     "https://www.victronenergy.com/media/pg/Manual_BlueSolar_MPPT_75-10_up_to_100-20/en/configuration-and-settings.html",
+     "https://www.victronenergy.com/upload/documents/Manual_SmartSolar_MPPT_75-10_up_to_100-20/29694-MPPT_solar_charger_manual-pdf.pdf",
+     "https://manualslib.es/manual/142239/Victron-Energy-Smartsolar-Mppt-Serie.html?page=13"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "O conflito na flutuação (13,2 V ou 13,5 V) não foi resolvido. Conferir no VictronConnect com o firmware real e na ficha da bateria de 6 Ah."
+   },
+   {
+    "topic": "Victron SmartSolar MPPT 75/10 e 75/15",
+    "item": "Limitar a corrente máxima de carga (VictronConnect)",
+    "claim": "A configuração 'Max charge current' do VictronConnect define a corrente máxima de carga da bateria. O padrão é a corrente máxima do controlador (10 A ou 15 A), e o manual cita como uso típico um banco de baterias pequeno que exige corrente menor. Um usuário da comunidade Victron confirma que o 75/15 pode ser limitado abaixo de 15 A pelo app. Isso serve para o caso de uma LiFePO4 de 6 Ah.",
+    "sources": [
+     "https://www.victronenergy.com/upload/documents/Manual_SmartSolar_MPPT_100-30__100-50/29694-MPPT_solar_charger_manual-pdf-en.pdf",
+     "https://www.victronenergy.com/upload/documents/Manual_SmartSolar_MPPT_150-35__150-45/29694-MPPT_solar_charger_manual-pdf-en.pdf",
+     "https://www.victronenergy.com/upload/documents/Manual_SmartSolar_MPPT_75-10_up_to_100-20/29694-MPPT_solar_charger_manual-pdf.pdf",
+     "https://community.victronenergy.com/t/victron-smart-solar-75-15-an-schaudt-lippert-ebl-402-uber-block-6-anschliessen/53676"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "O texto literal da configuração foi confirmado nos manuais irmãos (100/30–100/50 e 150/35–150/45). No manual 75/10–100/20 o título 'Max charge current' aparece, mas o trecho veio truncado. O valor mínimo ajustável não foi encontrado."
+   },
+   {
+    "topic": "Victron SmartSolar MPPT 75/10 e 75/15",
+    "item": "Saída LOAD (corrente e LVD configurável)",
+    "claim": "A saída LOAD do 75/10 e do 75/15 suporta 15 A contínuos e é à prova de curto-circuito. O desligamento por subtensão (LVD) pode ser configurado de duas formas. Pelo jumper na porta VE.Direct, as opções em 12 V são 11,1 V (religa em 13,1 V), 11,8 V (religa em 14,0 V) ou, sem jumper, o algoritmo BatteryLife. Pelo VictronConnect, há os algoritmos definidos pelo usuário: o 1 desliga abaixo de um limiar baixo e religa acima de um limiar alto; o 2 só liga entre os dois limiares. Para configurar pelo app, é preciso remover o jumper. As cargas do projeto, de 5 + 6 + 16 W em 12 V (cerca de 2,3 A), ficam bem abaixo do limite.",
+    "sources": [
+     "https://www.victronenergy.com/media/pg/Manual_SmartSolar_MPPT_75-10_up_to_100-20/en/technical-specifications.html",
+     "https://www.victronenergy.com/upload/documents/Datasheet-SmartSolar-charge-controller-MPPT-75-10,-75-15,-100-15,-100-20_48V-EN.pdf",
+     "https://www.victronenergy.com/upload/documents/Manual_SmartSolar_MPPT_75-10_up_to_100-20/29694-MPPT_solar_charger_manual-pdf.pdf",
+     "https://manualmachine.com/victronenergy/mppt7515/8055248-user-manual",
+     "https://community.victronenergy.com/t/the-load-output-with-user-def-algorithm-1-is-not-working-properly-on-mppt-75-15/10864"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "Há relatos na comunidade de LVD definido pelo usuário que não religa ou desliga fora do valor ajustado (relatos de usuários, não confirmados como defeito). Testar em bancada. Como o projeto chaveia as cargas por MOSFETs próprios, a saída LOAD pode servir só como proteção LVD de retaguarda."
+   },
+   {
+    "topic": "Victron SmartSolar MPPT 75/10 e 75/15",
+    "item": "Ordem de conexão",
+    "claim": "Pelo manual oficial, a ordem de conexão é bateria, depois cargas CC, depois FV e por último a porta VE.Direct. Após ligar a bateria, deve-se aguardar cerca de 10 s para a detecção automática da tensão do sistema. Ligar o FV antes da bateria só é permitido se a tensão do sistema tiver sido configurada manualmente antes. Segundo o manual, ignorar a sequência pode desabilitar ou danificar o controlador. O torque dos bornes é 0,75 N·m.",
+    "sources": [
+     "https://www.victronenergy.com/media/pg/Manual_SmartSolar_MPPT_75-10_up_to_100-20/en/installation.html",
+     "https://www.victronenergy.com/upload/documents/Manual_SmartSolar_MPPT_75-10_up_to_100-20/29694-MPPT_solar_charger_manual-pdf.pdf",
+     "https://communityarchive.victronenergy.com/questions/274905/correct-sequence-to-power-up-mppt-controllers.html"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "Na comunidade há um relato de controlador danificado ao reconectar a bateria com o FV ligado, com garantia negada pela Victron. No desligamento, retirar o FV antes da bateria."
+   },
+   {
+    "topic": "Victron SmartSolar MPPT 75/10 e 75/15",
+    "item": "Negativo comum FV/bateria e aterramento",
+    "claim": "Os MPPT Victron não-RS têm negativo comum: o negativo FV fica no mesmo potencial do negativo da bateria. A Victron orienta não aterrar o arranjo FV, aterrar em um único ponto, junto à bateria, e não interligar externamente o negativo FV ao da bateria contornando o controlador. Um usuário mediu 0 Ω entre os bornes negativos de um 75/15.",
+    "sources": [
+     "https://www.victronenergy.com/live/drafts:mppt_faq",
+     "https://community.victronenergy.com/t/pv-negative-mppt-75-15/6788",
+     "https://community.victronenergy.com/t/technical-question-about-victron-mppts/58614",
+     "https://www.victronenergy.com/media/pg/Inverter_RS_Smart_Solar/en/mppt-rs-troubleshooting.html"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "O FAQ da Victron é uma página 'drafts' e a medição de 0 Ω é relato de usuário. Implicação para o projeto: um shunt INA226 low-side no ramo FV ficaria em paralelo com a ligação interna de negativos do controlador. Medir a corrente FV em high-side é mais seguro."
+   },
+   {
+    "topic": "Victron SmartSolar MPPT 75/10 e 75/15",
+    "item": "Proteção de baixa temperatura para lítio",
+    "claim": "O corte de carga por baixa temperatura ('low temperature cut-off') vem desabilitado de fábrica, com valor padrão de 5 °C (indicado para LFP). Ele só funciona se o controlador estiver numa rede VE.Smart recebendo a temperatura da bateria de um Smart Battery Sense ou de um monitor (BMV/SmartShunt) com sensor. A carga volta quando a bateria passa 0,5 °C acima do corte. O sensor interno do controlador não serve para isso, porque aquece durante a carga.",
+    "sources": [
+     "https://www.victronenergy.com/media/pg/Manual_SmartSolar_MPPT_75-10_up_to_100-20/en/operation.html",
+     "https://www.victronenergy.com/upload/documents/Manual_SmartSolar_MPPT_75-10_up_to_100-20/29694-MPPT_solar_charger_manual-pdf.pdf",
+     "https://communityarchive.victronenergy.com/questions/123714/built-in-low-temp-sensor-smartsolar-mppt.html"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "Sem um acessório VE.Smart, a proteção de baixa temperatura fica a cargo do BMS da bateria. O DS18B20 do projeto não alimenta o controlador. No máximo, o ESP32 poderia desabilitar a carga via protocolo HEX, o que não foi verificado."
+   },
+   {
+    "topic": "Victron VE.Direct",
+    "item": "Protocolo texto (serial, quadro, checksum, campos)",
+    "claim": "A porta VE.Direct usa serial a 19200 bps, 8 bits de dados, sem paridade, 1 bit de parada e sem controle de fluxo. Ao ligar, o equipamento fica sempre em modo texto e transmite blocos a cada 1 s. Cada campo tem o formato <Newline><Rótulo><Tab 0x09><Valor ASCII>. O último campo é 'Checksum', um byte que pode não ser imprimível, e a soma de todos os bytes do bloco módulo 256 deve dar 0. Campos típicos de MPPT: V (tensão da bateria, mV), I (corrente da bateria, mA), VPV (tensão do painel, mV), PPV (potência do painel, W), CS (estado de carga, 0 a 9), ERR (código de erro), LOAD (ON/OFF), IL (corrente da carga, mA), H20 (rendimento do dia), H21 (potência máxima do dia, W) e MPPT (modo do rastreador). Ao receber uma mensagem HEX válida, firmwares antigos podem passar para o modo HEX.",
+    "sources": [
+     "https://www.victronenergy.nl/upload/documents/VE.Direct-Protocol-3.32.pdf",
+     "https://www.victronenergy.com/live/vedirect_protocol:faq",
+     "https://communityarchive.victronenergy.com/questions/29816/how-to-parse-vedirect-protocol.html",
+     "https://juju.nz/src/michaelh/vedirect/src/branch/master/vedirect/defs.py"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "O enquadramento, o checksum e a taxa de 19200 bps vêm do documento oficial. A unidade do H20 diverge entre fontes secundárias (0,01 kWh numa biblioteca, kWh num wiki). Usar a tabela do PDF oficial."
+   },
+   {
+    "topic": "Victron VE.Direct",
+    "item": "Níveis de tensão do TX, pino de alimentação e pinagem",
+    "claim": "Segundo o FAQ oficial, todos os modelos de MPPT usam nível de 5 V na VE.Direct; BMV-700, a linha RS e os inversores VE.Direct de 250 a 500 VA usam 3,3 V. O pino de alimentação (5 V ou 3,3 V) fornece no máximo 10 mA em média, com picos de 20 mA por até 5 ms. Isso basta para um isolador ou conversor de nível, não para alimentar o ESP32. A pinagem do documento de protocolo é: 1 = GND, 2 = RX, 3 = TX, 4 = +V (alimentação), com TX e RX cruzados entre produtor e consumidor. O conector é um JST-PH de 2,0 mm com 4 vias.",
+    "sources": [
+     "https://www.victronenergy.com/live/vedirect_protocol:faq",
+     "https://www.victronenergy.nl/upload/documents/VE.Direct-Protocol-3.32.pdf",
+     "https://github.com/syssi/esphome-victron-vedirect",
+     "https://www.github.com/KinDR007/VictronMPPT-ESPHOME",
+     "https://communityarchive.victronenergy.com/questions/48562/vedirect-diy-cable%EF%B9%96childToView=65013.html"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "O tipo JST-PH 2,0 vem de projetos ESPHome (fonte secundária). Um usuário relata pinagem invertida (pino 1 = 5 V) num 75/10, então medir com multímetro antes de ligar. Como o ESP32 trabalha com GPIO em 3,3 V, o TX de 5 V do MPPT pede divisor resistivo, conversor de nível ou isolador."
+   },
+   {
+    "topic": "Victron VE.Direct",
+    "item": "Necessidade de isolamento galvânico",
+    "claim": "O FAQ oficial diz que as portas VE.Direct são ligações diretas à UART do equipamento, com pouquíssima proteção interna. A Victron recomenda suas interfaces (VE.Direct-USB ASS030530000 e VE.Direct-RS232 ASS030520500), que têm isolamento galvânico. Para ligar um microcontrolador, a comunidade sugere isoladores digitais como ADuM1201 ou Si8422, com o lado Victron alimentado pelo pino 4. O isolador também resolve a conversão de nível de 5 V para 3,3 V.",
+    "sources": [
+     "https://www.victronenergy.com/live/vedirect_protocol:faq",
+     "https://communityarchive.victronenergy.com/questions/70645/logic-level-of-phoenix-12500-vedirect-to-connect-t.html",
+     "https://me-site.pages.dev/projects/victron-vedirect",
+     "https://github.com/syssi/esphome-victron-vedirect"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "A recomendação de isolamento é da Victron. Os modelos específicos de isolador vêm da comunidade. Nenhuma fonte oficial diz explicitamente se o GND da VE.Direct é o negativo da bateria, mas o FAQ ('ligação direta à UART') e o negativo comum indicam que sim."
+   },
+   {
+    "topic": "EPEver Tracer 1210AN (série Tracer AN)",
+    "item": "MPPT verdadeiro, Voc máx., corrente, potência e eficiência",
+    "claim": "O Tracer1210AN é um controlador MPPT com eficiência de rastreamento ≥ 99,5% e eficiência de conversão máxima ≤ 98%. As correntes nominais de carga e de descarga (LOAD) são de 10 A, com bateria 12/24 V automática (faixa de 8 a 32 V). O Voc máximo do FV é 100 V na temperatura ambiente mínima de operação e 92 V a 25 °C. A potência FV máxima é 130 W em 12 V e 260 W em 24 V. O autoconsumo é ≤ 12 mA no modelo original; no G3, menos de 10 mA (≤ 8 mA em 12 V). Dimensões: 172 × 139 × 44 mm; massa de cerca de 0,57 kg.",
+    "sources": [
+     "https://www.epever.com/?p=1402",
+     "https://www.epever.com/upload/file/2107/EPEVER-Datasheet_Tracer-AN%20(10A-40A).pdf",
+     "https://www.epever.com/product/tracer-an-g3-series-mppt-charge-controller/",
+     "https://www.epever.com/wp-content/uploads/2024/08/Tracer-AN-G3-Manual-EN-V2.4.pdf",
+     "https://manuals.plus/asin/B081JWDJFS"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "O manual antigo V1.0 cita 96 V; os manuais V2.x e o datasheet usam 100 V/92 V. Existem duas gerações (original e G3) com diferenças de especificação. Confirmar a geração na etiqueta da unidade comprada."
+   },
+   {
+    "topic": "EPEver Tracer 1210AN (série Tracer AN)",
+    "item": "Suporte a LiFePO4 e parâmetros configuráveis",
+    "claim": "A página da série Tracer AN (10 a 40 A) lista os tipos de bateria Sealed, Gel, Flooded, LiFePO4, Li(NiCoMn)O2 e User. Segundo o resumo de busca do manual G3 V2.4, o preset LFP 4S (12 V) usa: desconexão por sobretensão em 14,5 V, limite de carga em 14,3 V, boost e equalização em 14,2 V e flutuação em 13,3 V. No modo User os parâmetros vão de 9 a 15,5 V (a desconexão por sobretensão, de 9 a 17 V). A proteção de baixa temperatura para e retoma carga e descarga, com padrão de 0 °C ajustável de −40 a 10 °C, e exige sensor externo de temperatura. Sem esse sensor, o controlador assume 25 °C.",
+    "sources": [
+     "https://www.epever.com/?p=1402",
+     "https://www.epever.com/wp-content/uploads/2024/08/Tracer-AN-G3-Manual-EN-V2.4.pdf",
+     "https://manuals.plus/asin/B07MSD7S7Z",
+     "https://www.cavelab.dev/posts/epever-tracer-lifepo4-camper-settings/"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "Segundo um resumo de busca, manuais G3 mais antigos (V2.0/V2.2) listariam só chumbo-ácido + User. Manuais Tracer AN antigos (não G3) podem não ter presets de lítio, e nesse caso se usa o modo User. Os valores do preset LFP vieram de um resumo de busca do PDF oficial."
+   },
+   {
+    "topic": "EPEver Tracer 1210AN (série Tracer AN)",
+    "item": "Limitação da corrente de carga",
+    "claim": "A EPEVER anuncia uma função de limitação de potência e corrente de carga que impede ultrapassar o valor nominal (10 A). Não encontrei em fonte oficial nenhum parâmetro do usuário para limitar a corrente de carga abaixo do nominal no Tracer AN de 10 a 40 A. Com painel de 50 W, a corrente de carga fica limitada na prática pela potência do painel: cerca de 50 W / 13,2 V ≈ 3,8 A no caso ideal, sem perdas.",
+    "sources": [
+     "https://www.epever.com/?p=1402",
+     "https://epever.com/?p=1055",
+     "https://devices.esphome.io/devices/epever_mptt_tracer_an"
+    ],
+    "confidence": "nao_verificado",
+    "notes": "A ausência do ajuste não está confirmada, apenas não foi encontrado. O valor de 3,8 A é um cálculo. Esta é uma desvantagem frente ao Victron, que tem 'Max charge current'."
+   },
+   {
+    "topic": "EPEver Tracer 1210AN (série Tracer AN)",
+    "item": "Comunicação RS-485 (porta RJ45, pinagem, isolamento)",
+    "claim": "Pelo manual G3 V2.4, a porta de comunicação é um RJ45 RS-485 com a pinagem: 1–2 = +5 VDC, 3–4 = RS485-B, 5–6 = RS485-A, 7–8 = GND. A alimentação de 5 VDC/200 mA tem proteção contra sobrecorrente e curto. O mesmo manual informa que a porta RS-485 dos modelos G3 de 10 a 40 A NÃO tem isolamento e recomenda um isolador RS-485.",
+    "sources": [
+     "https://www.epever.com/wp-content/uploads/2024/08/Tracer-AN-G3-Manual-EN-V2.4.pdf",
+     "https://www.epever.com/product/tracer-an-g3-series-mppt-charge-controller/",
+     "https://www.epever.com/wp-content/uploads/2021/08/RS485-1M2S-Manual-EN-V1.1.pdf",
+     "https://www.github.com/kasbert/epsolar-tracer",
+     "https://community.home-assistant.io/t/epever-tracer3210an-g3-monitor-with-esphome-using-rs485/1020970"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "Há conflito: revendedores (incluindo uma loja brasileira) e manuais de modelos maiores (50 a 100 A) dizem que a porta é isolada. Um usuário relatou A/B invertidos em relação à tabela, então trocar A/B se não houver resposta. Para o projeto: transceptor MAX485 ou equivalente com isolador (ou módulo RS-485 isolado), sem usar os 5 V do RJ45 para alimentar o ESP32."
+   },
+   {
+    "topic": "EPEver Tracer 1210AN (série Tracer AN)",
+    "item": "Modbus RTU (baud e registradores principais)",
+    "claim": "O protocolo é Modbus RTU a 115200 bps, 8 bits, 1 bit de parada, sem paridade, com endereço padrão 1. A configuração ESPHome foi testada nos Tracer-AN de 10 a 40 A com 115200 bps e endereço 0x01. Registradores de dados em tempo real, lidos com a função 0x04 e escala ×100: 0x3100 = tensão FV (V/100), 0x3101 = corrente FV (A/100), 0x3102/0x3103 = potência FV (W/100, parte baixa e alta), 0x3104 = tensão da bateria (V/100), 0x3105 = corrente de carga da bateria (A/100), 0x310C = tensão da carga, 0x310D = corrente da carga, 0x3200 = status da bateria (bits). Os dados nominais ficam no bloco 0x3000.",
+    "sources": [
+     "https://www.img4.cz/i4wifi/attach/StoItem/7245/MODBUS-Protocol-v25.pdf",
+     "https://github.com/rosswarren/epevermodbus/files/9223710/ControllerProtocolV2.3.pdf",
+     "https://www.studocu.com/cs/document/vysoke-uceni-technicke-v-brne/electrical-engineering-and-electronics/epsolar-modbus-protocol-map/40181644",
+     "https://devices.esphome.io/devices/epever_mptt_tracer_an",
+     "https://github.com/gabrielpc1190/Home-Assistant_EPEver-eBox-Wifi-01-MODBUS/"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Os documentos de protocolo EPEVER (v2.3 e v2.5) estão hospedados por terceiros. Uma fonte não confiável diz que algumas unidades 12/24 V saem de fábrica a 9600 bps, e um acessório EPEVER permite escolher 9600 ou 115200. O registrador 0x311A (SOC) não foi confirmado."
+   },
+   {
+    "topic": "EPEver Tracer 1210AN (série Tracer AN)",
+    "item": "Negativo comum / aterramento",
+    "claim": "Os manuais oficiais da série Tracer AN dizem que os negativos do FV, da bateria e da carga podem ser aterrados juntos ou apenas um deles, e que o terminal de aterramento da carcaça deve ser aterrado. O manual da linha de 50 a 100 A afirma que os negativos FV e de bateria ficam no mesmo barramento. Listagens do 1210AN o descrevem como 'common negative'. Os manuais alertam que equipamentos de positivo comum com o positivo aterrado podem danificar o controlador.",
+    "sources": [
+     "https://www.epever.com/wp-content/uploads/2024/08/Tracer-AN-G3-Manual-EN-V2.4.pdf",
+     "https://www.epever.com/wp-content/uploads/2021/05/Tracer-AN50-100A-Manual-EN-V3.1.pdf",
+     "https://www.epever.com/wp-content/uploads/2021/05/Tracer-AN-Manual-EN-V2.6.pdf",
+     "https://manuals.plus/asin/B081JWDJFS",
+     "https://www.testsieger.de/solar-laderegler/FC5K05BRSGQSU-epever-tracer1210an-mppt-laderegler-10a-12v24v-lcd-display-common-negative-erdung.html"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "A afirmação literal 'negativo comum' para o 1210AN vem de listagens. A orientação de aterramento vem dos manuais oficiais. Vale a mesma ressalva do Victron: medir a corrente FV em high-side."
+   },
+   {
+    "topic": "EPEver Tracer 1210AN (série Tracer AN)",
+    "item": "Saída LOAD e ordem de conexão",
+    "claim": "A saída LOAD tem corrente nominal de descarga de 10 A. O LVD padrão é 11,1 V para baterias Sealed, Gel e Flooded, ajustável de 9 a 15,5 V no modo User; os presets de lítio usam valores diferentes. Inversores devem ser ligados direto na bateria, não na saída LOAD. Pelo manual G3, a ordem de conexão é bateria, depois carga, depois FV, e a de desconexão é a inversa. A página oficial justifica a bateria primeiro: a proteção contra inversão de polaridade da bateria só funciona se o FV ainda não estiver conectado.",
+    "sources": [
+     "https://www.epever.com/wp-content/uploads/2024/08/Tracer-AN-G3-Manual-EN-V2.4.pdf",
+     "https://www.epever.com/wp-content/uploads/2024/08/Tracer-AN-G3-Manual-EN-V2.2.pdf",
+     "https://www.epever.com/product/tracer-an-g3-series-mppt-charge-controller/",
+     "https://www.epever.com/?p=1402",
+     "https://www.epever.com/wp-content/uploads/2021/05/Tracer-AN50-100A-Manual-EN-V3.4.pdf"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "Os modos de controle da saída LOAD (manual, luz, temporizador) e o LVD do preset LFP não foram confirmados."
+   },
+   {
+    "topic": "Alerta: falso MPPT",
+    "item": "Critérios para identificar PWM anunciado como MPPT",
+    "claim": "1) Inspeção física: um MPPT verdadeiro é um conversor chaveado (buck) e tem indutor de potência de tamanho visível na placa; os PWM/shunt baratos não têm indutor de potência. 2) Teste elétrico: com o controlador em plena carga, um MPPT mantém a tensão do painel perto de Vmp (por exemplo ~17 a 18 V), enquanto um PWM puxa o painel para perto da tensão da bateria (~13 a 14 V). Com Vpv bem acima de Vbat, o MPPT entrega corrente de bateria maior que a corrente do painel; no PWM, Ibat ≈ Ipv. 3) Anúncio e especificações: títulos que misturam 'MPPT' e 'PWM', ausência de Voc máximo e de eficiência de rastreamento, correntes exageradas e preço muito baixo são sinais de alerta. 4) Peso e preço são indícios fracos: controladores genuínos de 10 a 15 A também são leves (Victron 75/15 ≈ 0,5 kg; EPEver 1210AN ≈ 0,57 kg).",
+    "sources": [
+     "https://forum.solar-electric.com/discussion/comment/389937",
+     "https://forum.solar-electric.com/discussion/comment/389938",
+     "https://forum.solar-electric.com/discussion/comment/390579",
+     "https://forum.allaboutcircuits.com/threads/is-this-mppt-or-pwm.124550/post-1004188",
+     "https://www.motorhomefun.co.uk/forum/threads/opinions-please-on-this-charge-controller-is-this-just-bs.143065/",
+     "https://www.bkhome.org/news/201904/beware-the-cheap-mppt-solar-regulators.html",
+     "https://bkhome.org/news/201905/mppt-regulator-is-genuine-mppt.html",
+     "https://wildcamping.co.uk/goto/post?id=2470570",
+     "https://www.fruugo.pt/mppt-solar-charge-controller-energy-smart-solar-75v-15a-1224v-adjustable-lcd-pwm-car-params-panel-battery-dual-usb-100a/p-395133066-844489909"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Fóruns sugerem regras de peso (cerca de 8 oz falso contra 8 lb real) e de preço (cerca de US$ 45 falso contra ≥ US$ 120 real), mas elas valem para controladores grandes e não para 10 A. Um fórum também sugere usar o autoconsumo (MPPT 'em watts'), o que é contraditado pelo Victron (dezenas de mA), então não usar esse critério. O autor do bkhome achou falsos entre os MPPT baratos, mas também um modelo barato genuíno."
+   },
+   {
+    "topic": "Disponibilidade no Brasil",
+    "item": "Victron SmartSolar 75/15 e 75/10",
+    "claim": "Os dois estão à venda no Brasil. O 75/15 aparece no Mercado Livre (página de produto MLB43676169), com ofertas de cerca de R$ 820,90 e R$ 912,50 no momento da busca. O 75/10 aparece na Amazon.com.br (B075NTT8GH) por cerca de R$ 434,70. A Victron tem site em português (victronenergy.com.br). Não encontrei nos resultados um distribuidor oficial brasileiro identificado.",
+    "sources": [
+     "https://www.mercadolivre.com.br/controlador-solar-victron-smartsolar-mppt-75v-15a/p/MLB43676169",
+     "https://lista.mercadolivre.com.br/controlador-de-carga-mppt-victron",
+     "https://www.amazon.com.br/Victron-SmartSolar-MPPT-75-Controlador/dp/B075NTT8GH",
+     "https://www.amazon.com.br/Controlador-bateria-solar-scc010015050r-bluesolar/dp/B018M88G98",
+     "https://www.victronenergy.com.br/cables/ve-direct-tx-digital-output-cable"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Preços são instantâneos e variam por vendedor. O anúncio do Mercado Livre chama o equipamento de 'step-up', o que está errado. Uma listagem da Amazon BR traz um código BlueSolar (SCC010015050R) que não bate com o produto. Conferir o código: SCC075010060R para o 75/10 e SCC075015060R para o 75/15, segundo lojas estrangeiras. Preferir vendedor com nota fiscal."
+   },
+   {
+    "topic": "Disponibilidade no Brasil",
+    "item": "EPEver Tracer 1210AN / série Tracer AN",
+    "claim": "A série Tracer AN é vendida no Brasil: a Neosolar tem página da linha Tracer AN, e o Mercado Livre tem anúncios de Tracer AN, incluindo 'Controlador Carga Mppt 10a 12v/24v Epever Tracer 1210an 100v' por cerca de R$ 498 no momento da busca, além do 2206AN. A Energia Total vende modelos maiores da série (100 A). A Ubuy Brasil oferece a linha EPEVER importada.",
+    "sources": [
+     "https://www.neosolar.com.br/loja/controlador-carga-mppt-epever-tracer-an/",
+     "https://lista.mercadolivre.com.br/controlador-carga-mppt-epever",
+     "https://eletronicos.mercadolivre.com.br/controlador-de-carga-mppt-epever",
+     "https://produto.mercadolivre.com.br/MLB-1823560929-controlador-carga-mppt-20a-epever-tracer-2206an-solarfotov-_JM",
+     "https://www.energiatotal.com.br/controlador-de-carga-100a-tracer-an-epever",
+     "https://www.ubuy.com.br/pt/productuk/165C5ECIE-epever-mppt-solar-charge"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Não confirmei estoque nem preço do 1210AN na Neosolar. O link exato do anúncio de R$ 498 não foi identificado; ele aparece nas listas do Mercado Livre. Verificar se é a geração original ou a G3."
+   }
+  ],
+  "open_issues": [
+   "Victron 75/10 e 75/15: confirmar no PDF oficial o autoconsumo (resumo de busca: ~19 mA com LOAD ligada e ~10 mA com LOAD desligada, em 12 V). O PDF não foi aberto porque victronenergy.com estava bloqueado para WebFetch.",
+   "Victron, preset LiFePO4: a flutuação aparece como 13,2 V na tabela e como 13,5 V em outro texto. Confirmar no VictronConnect com o firmware real e alinhar com a ficha da bateria de 6 Ah e do BMS.",
+   "Victron 75/10: corrente máxima de curto-circuito FV aparece como 10 A no manual e 13 A no datasheet. Irrelevante para painel de 50 W, mas fica a divergência registrada.",
+   "Victron 'Max charge current': confirmar no app o valor mínimo ajustável no 75/10 e no 75/15, e se dá para ajustar entre 1 e 3 A para a LiFePO4 de 6 Ah. Também confirmar a corrente máxima de carga admitida pela bateria e pelo BMS.",
+   "Victron: com painel de 36 células, conferir no datasheet do painel que Voc na temperatura de operação supera Vbat + 5 V (cerca de 17,8 a 19,2 V para Vbat entre 12,8 e 14,2 V), condição de partida, e que Vmp em alta temperatura supera Vbat + 1 V.",
+   "VE.Direct: medir com multímetro a pinagem real (há relato de pino 1 = 5 V num 75/10), o nível do TX (o FAQ diz 5 V para MPPT) e se o GND da VE.Direct é o negativo da bateria. Definir divisor, conversor de nível ou isolador (ADuM1201/Si8422) antes de ligar ao ESP32.",
+   "Victron: o corte por baixa temperatura exige Smart Battery Sense, BMV ou SmartShunt via VE.Smart. Confirmar se o BMS da LiFePO4 de 6 Ah escolhida tem proteção de carga abaixo de 0 a 5 °C.",
+   "Victron: saída LOAD com algoritmo definido pelo usuário tem relatos de falha de religamento na comunidade. Validar em bancada antes de usar como LVD.",
+   "EPEver 1210AN: confirmar a geração (original ou G3) na unidade comprada. Mudam: Voc (100 V/92 V), autoconsumo (≤12 mA ou <10 mA), tipos de bateria (com ou sem preset LFP), isolamento do RS-485 (G3 sem isolamento; revendedores dizem isolado) e a pinagem do RJ45.",
+   "EPEver: confirmar no manual oficial os valores do preset LFP 4S (14,5/14,3/14,2/13,3 V), que vieram de resumo de busca do manual G3 V2.4, e o LVD/LVR do preset de lítio.",
+   "EPEver: não foi encontrado parâmetro do usuário para limitar a corrente de carga abaixo de 10 A. Com painel de 50 W o limite prático é cerca de 3,8 A (cálculo ideal). Confirmar se isso é aceitável para a bateria de 6 Ah.",
+   "EPEver Modbus: os documentos de protocolo (v2.3 e v2.5) consultados são cópias de terceiros. Confirmar na unidade o baud (115200 ou 9600), o endereço (1), as escalas e os registradores 0x3105, 0x310C, 0x310D e 0x3200, além do 0x311A (SOC, não confirmado) e da polaridade A/B do RJ45.",
+   "Falso MPPT: os critérios vêm de fóruns. Para validar o controlador comprado, fazer o teste em bancada: medir Vpv e Ipv contra Vbat e Ibat em plena carga e verificar se Vpv fica perto de Vmp e se Ibat > Ipv.",
+   "Disponibilidade e preços no Brasil são instantâneos da busca (Mercado Livre, Amazon BR, Neosolar). Revalidar no momento da compra, exigir nota fiscal e conferir o código do produto Victron (SCC075010060R ou SCC075015060R)."
+  ]
+ },
+ {
+  "key": "sensores_eletronica",
+  "findings": [
+   {
+    "topic": "INA226",
+    "item": "Faixa de modo comum, alimentação e corrente quiescente",
+    "claim": "O INA226 mede a queda no shunt com tensão de modo comum/barramento de 0 a 36 V, independentemente da alimentação. VS (alimentação) vai de 2,7 a 5,5 V. Corrente quiescente: 330 µA típ., 420 µA máx. As entradas analógicas toleram 40 V como máximo absoluto, mas o datasheet manda não aplicar mais de 36 V.",
+    "sources": [
+     "https://www.ti.com/document-viewer/INA226/datasheet/GUID-XXXXXXXX-SF0T-XXXX-XXXX-000000348723",
+     "https://ti.com/document-viewer/INA226/datasheet",
+     "https://www.ti.com/product/ina226",
+     "https://pdf.direnc.net/upload/ina226-datasheet.pdf"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "Datasheet TI SBOS547B (set/2024). A página de produto da TI já mostra a Rev. C, que não consegui abrir. O WebFetch para www.ti.com falhou por restrição de rede."
+   },
+   {
+    "topic": "INA226",
+    "item": "Tensão de shunt: faixa e LSB",
+    "claim": "A tensão de shunt cobre ±81,92 mV com LSB de 2,5 µV. O registrador é de 16 bits em complemento de 2: 81,92 mV / 2,5 µV = 32768 contagens.",
+    "sources": [
+     "https://www.ti.com/document-viewer/INA226/datasheet/GUID-XXXXXXXX-SF0T-XXXX-XXXX-000000348723",
+     "https://pccomponents.com/datasheets/TEXAS-INA226AIDGSR.pdf"
+    ],
+    "confidence": "verificado_fonte_primaria"
+   },
+   {
+    "topic": "INA226",
+    "item": "Tensão de barramento: faixa e LSB",
+    "claim": "O registrador de barramento (02h) tem LSB de 1,25 mV e fundo de escala de 40,96 V (7FFFh). A faixa de operação é de 0 a 36 V.",
+    "sources": [
+     "https://ti.com/document-viewer/INA226-Q1/datasheet/bus-voltage-register-02h-read-only-sbos5475268",
+     "https://html.alldatasheet.com/html-pdf/737770/TI/INA226-Q1_15/834/24/INA226-Q1_15.html",
+     "https://ti.com/document-viewer/INA226/datasheet"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "O valor numérico apareceu na cópia do INA226-Q1 (alldatasheet), que tem o mesmo mapa de registradores. O INA226 não mede tensão de barramento negativa."
+   },
+   {
+    "topic": "INA226",
+    "item": "Endereços I²C (A0/A1)",
+    "claim": "Os pinos A0 e A1 dão 16 endereços de 7 bits, de 0x40 a 0x4F, ligando cada pino a GND, VS, SDA ou SCL (Tabela 6-2). Linhas confirmadas nos trechos do datasheet: A1=GND, A0=GND → 1000000 (0x40); A1=VS, A0=SDA → 1000110 (0x46); A1=VS, A0=SCL → 1000111 (0x47). Padrão deduzido para o resto: A1=GND → 0x40–0x43, A1=VS → 0x44–0x47, A1=SDA → 0x48–0x4B, A1=SCL → 0x4C–0x4F, com A0 na ordem GND, VS, SDA, SCL. O estado de A0/A1 é amostrado a cada comunicação no barramento.",
+    "sources": [
+     "https://www.ti.com/document-viewer/INA226/datasheet/GUID-04681112-5B8D-4539-BD05-99C89649E0E0",
+     "https://e2e.ti.com/support/amplifiers-group/amplifiers/f/amplifiers-forum/398732/ina226---i2c-address-selection-mechanism",
+     "https://esp32.co.uk/?p=980009",
+     "https://components101.com/ics/ina226-current-power-monitor-ic"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "As linhas A1=SDA e A1=SCL (0x48–0x4F) não apareceram nos trechos e ficaram em pendências. Alguns módulos só oferecem pontes de solda para GND/VS, ou seja, apenas 0x40, 0x41, 0x44 e 0x45 (esp32.co.uk). Para 3 INA226 no mesmo barramento, sugiro 0x40, 0x41 e 0x44."
+   },
+   {
+    "topic": "INA226",
+    "item": "Mapa de registradores e IDs",
+    "claim": "Registradores: 00h Configuração (R/W, POR 4127h); 01h Tensão de shunt (R); 02h Tensão de barramento (R); 03h Potência (R); 04h Corrente (R); 05h Calibração (R/W); 06h Mask/Enable (R/W, POR 0000h); 07h Alert Limit (R/W, POR 0000h); FEh Manufacturer ID = 5449h; FFh Die ID = 2260h (12 bits de ID do dispositivo + 4 bits de revisão). Os registradores de Corrente (04h) e Potência (03h) ficam em zero até a Calibração ser programada.",
+    "sources": [
+     "https://www.ti.com/document-viewer/INA226/datasheet/GUID-1EEE3EE9-FC08-47E3-ADE4-99D6A32F08FD",
+     "https://www.ti.com/document-viewer/lit/html/SBOS743B/GUID-1EEE3EE9-FC08-47E3-ADE4-99D6A32F08FD",
+     "https://www.ti.com/document-viewer/INA226/datasheet/GUID-6158DD6F-FB38-4A2D-94B7-769AE3AFF897"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "Decodifiquei 4127h por conta própria: AVG=1, VBUSCT=1,1 ms, VSHCT=1,1 ms, MODE=111 (shunt e barramento contínuos). O firmware deve conferir FEh=0x5449 e FFh=0x2260 na inicialização."
+   },
+   {
+    "topic": "INA226",
+    "item": "Fórmula de calibração",
+    "claim": "CAL = trunc(0,00512 / (Current_LSB × Rshunt)), com Current_LSB = Imáx_esperada / 2^15 e Power_LSB = 25 × Current_LSB. Exemplo do E2E: Current_LSB = 100 µA e Rshunt = 0,1 Ω dão CAL = 512 e Power_LSB = 2,5 mW. Cálculos próprios: com R010 (0,01 Ω) e Current_LSB = 250 µA (fundo ≈ 8,19 A), CAL = 2048 e Power_LSB = 6,25 mW. Com R100 (0,1 Ω) e Current_LSB = 25 µA (fundo ≈ 0,819 A), CAL = 2048.",
+    "sources": [
+     "https://www.ti.com.cn/document-viewer/cn/lit/html/ZHCS078B/GUID-B2CE2550-211D-4C6E-9B82-832BC0EFAE26",
+     "https://www.ti.com/document-viewer/INA226/datasheet/GUID-60374C02-F07E-4084-BD18-15652EBFC901",
+     "https://e2e.ti.com/support/amplifiers-group/amplifiers/f/amplifiers-forum/1036361/ina226-ina226aidgsr-current-calibration-and-current-reading",
+     "https://e2e.ti.com/support/amplifiers-group/amplifiers/f/amplifiers-forum/1055070/ina226-calibration-register",
+     "https://lkml.iu.edu/hypermail/linux/kernel/1712.2/00440.html"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "Um thread do E2E escreve a fórmula sem parênteses, o que está errado: o divisor é o produto Current_LSB × Rshunt. Pela discussão no kernel Linux, com Current_LSB = Imáx/2^15 o CAL mínimo é 2048."
+   },
+   {
+    "topic": "INA226",
+    "item": "Erros de offset e de ganho",
+    "claim": "Offset de shunt (RTI): ±2,5 µV típ., ±10 µV máx. Offset de barramento: ±1,25 mV típ., ±7,5 mV máx. Erro de ganho do shunt: 0,02% típ., 0,1% máx. A corrente de polarização da entrada gera um offset extra igual a Rshunt × IB, que depende do modo comum.",
+    "sources": [
+     "https://www.ti.com/document-viewer/INA226/datasheet/GUID-XXXXXXXX-SF0T-XXXX-XXXX-000000348723",
+     "https://pdf.elecfans.com/BURR-BROWN/INA226AIDGST.html",
+     "https://www.ti.com/product/ina226",
+     "https://e2e.ti.com/support/amplifiers-group/amplifiers/f/amplifiers-forum/889815/ina226-ina226"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "O erro de ganho da tensão de barramento não foi confirmado separadamente (ver pendências)."
+   },
+   {
+    "topic": "INA226",
+    "item": "Tempos de conversão e médias",
+    "claim": "Tempos de conversão (VBUSCT/VSHCT, 3 bits cada): 140 µs, 204 µs, 332 µs, 588 µs, 1,1 ms, 2,116 ms, 4,156 ms e 8,244 ms. Médias (AVG): 1, 4, 16, 64, 128, 256, 512 ou 1024. Tempo de atualização ≈ (tSH + tBUS) × AVG. Exemplo da TI: 4,156 ms + 588 µs com AVG=1 dá cerca de 4,7 ms. Cálculo próprio: 1,1 ms + 1,1 ms com AVG=16 dá ≈ 35 ms.",
+    "sources": [
+     "https://ti.com/document-viewer/INA226/datasheet/GUID-3282E94D-F3BA-4D62-847C-1A5B7191B839",
+     "https://ti.com/document-viewer/INA226-Q1/datasheet/configuration-register-00h-read-write-sbos5476604",
+     "https://gitcode.com/openharmony/kernel_linux_6.6/blob/master/drivers/hwmon/ina2xx.c",
+     "https://esphome.io/components/sensor/ina226.html"
+    ],
+    "confidence": "verificado_fonte_primaria"
+   },
+   {
+    "topic": "INA226",
+    "item": "Função ALERT",
+    "claim": "O pino ALERT é saída em dreno aberto e precisa de pull-up. Por padrão é ativo em nível baixo; o bit APOL inverte para ativo alto. O Mask/Enable (06h) seleciona uma função: SOL (sobretensão de shunt, bit 15), SUL (subtensão de shunt), BOL (sobretensão de barramento), BUL (subtensão de barramento), POL (sobrepotência) ou CNVR (conversão pronta, bit 10). Só uma função de alerta pode ficar ativa por vez. Com LEN em modo latch, o pino e a flag ficam ativos até a leitura do Mask/Enable. Se alerta e CNVR estiverem habilitados juntos, é preciso ler o 06h para saber a origem. O limiar fica no Alert Limit (07h).",
+    "sources": [
+     "https://www.ti.com/document-viewer/lit/html/SBOS547B/GUID-145A0DF4-8953-4E8A-947B-4DA591CF005B",
+     "https://www.ti.com/document-viewer/INA226/datasheet/GUID-EC7EA789-7343-461D-B3B5-2DF0D54DECDB",
+     "https://ti.com/document-viewer/INA226-Q1/datasheet/mask-enable-register-06h-read-write-sbos5475854",
+     "https://ti.com/document-viewer/INA226-Q1/datasheet/alert-pin-sbos5474006.html"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "Uma tabela da TI rotula APOL como 'bit 11', o que parece erro. As demais fontes dizem bit 1. A escala do Alert Limit não foi confirmada."
+   },
+   {
+    "topic": "Módulos INA226",
+    "item": "Shunt padrão R100 (CJMCU-226 e similares)",
+    "claim": "O shunt mais comum nos módulos INA226 (CJMCU-226 e similares) vem marcado R100 = 0,1 Ω. Isso dá fundo de escala teórico de ±81,92 mV / 0,1 Ω ≈ ±819 mA; os vendedores anunciam cerca de −820 a +820 mA ou 0,8 A. Cálculo próprio: a 0,82 A o shunt dissipa ≈ 67 mW.",
+    "sources": [
+     "https://universal-solder.ca/product/ina226-high-precision-0-1-current-monitor-0-36v-max-3-2a-i2c-interface/",
+     "https://sigmanortec.ro/en/current-and-power-monitor-sensor-ina226-i2c-iic-bidirectional-16bit-27-55v",
+     "https://done.land/components/power/measuringcurrent/viashunt/ina226/",
+     "https://e2e.ti.com/support/amplifiers-group/amplifiers/f/amplifiers-forum/1084109/ina226-inquiry",
+     "https://community.particle.io/t/monitoring-voltage-take-me-to-school/24174?page=2",
+     "https://www.globalsources.com/Current-sensor/INA226-R100-module-1233935050p.htm",
+     "https://www.gotronik.pl/modul-pomiarowy-pradu-i-napiecia-ina226-i2c-z-bocznikiem-r100-kartapdf-14833.html"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Não existe datasheet de fabricante para o CJMCU-226 ou o GY-INA226. Como a origem dos componentes varia, convém conferir a marcação do shunt na placa recebida."
+   },
+   {
+    "topic": "Módulos INA226",
+    "item": "Módulos com shunt R010 (10 mΩ)",
+    "claim": "Existem módulos INA226 com shunt R010 = 0,01 Ω, anunciados como '8A 36V max' (fundo teórico ≈ 8,19 A, com resolução de 2,5 µV/0,01 Ω = 0,25 mA). Um teste mediu 0,021 Ω efetivos numa placa marcada R010, por causa das trilhas e conexões. Um guia estima que a corrente prática máxima dessas placas fica entre 5 e 8 A, limitada pela PCB.",
+    "sources": [
+     "https://domoticx.net/webshop/stroommeter-module-dc-8a-36v-max-digitaal-i2c-r010-001-ohm-shunt-ina226",
+     "https://done.land/components/power/measuringcurrent/viashunt/ina226/",
+     "https://applied-ee.github.io/embedded/docs/power-battery/power-measurement/in-circuit-current-monitoring/",
+     "https://www.espruino.com/INA226"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Calibre a resistência efetiva com carga conhecida em vez de usar os 0,01 Ω nominais."
+   },
+   {
+    "topic": "Módulos INA226",
+    "item": "Shunt externo para 4–8 A",
+    "claim": "Para correntes maiores, a recomendação é remover o shunt R100 soldado e ligar IN+/IN− a um shunt externo; se o R100 ficar no lugar, ele entra em paralelo e altera a resistência. Cálculos próprios: um shunt de 75 mV/10 A (7,5 mΩ) dá fundo ≈ 10,9 A e dissipa 0,75 W a 10 A; um de 20 mΩ dá fundo ≈ 4,1 A. Pela soma das cargas (5 + 6 + 16 W = 27 W, ≈ 2,25 A a 12 V), o R100 satura no INA226 das cargas e provavelmente também nos do FV e da bateria.",
+    "sources": [
+     "https://done.land/components/power/measuringcurrent/viashunt/ina226/",
+     "https://hackaday.io/project/204686-mastering-the-ina219-ina226/details",
+     "https://www.mikrocontroller.net/topic/338161",
+     "https://community.particle.io/t/monitoring-voltage-take-me-to-school/24174?page=2"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "As correntes do projeto são cálculo próprio. A Imp/Isc do painel de 50 W não foi verificada nesta tarefa. Com carga resistiva fixa (R = 12²/16 = 9 Ω), a 14,4 V a corrente sobe para 1,6 A (23 W)."
+   },
+   {
+    "topic": "Módulos INA226",
+    "item": "Disponibilidade no Brasil",
+    "claim": "A busca não trouxe nenhum anúncio de módulo INA226 nas lojas brasileiras citadas (UsinaInfo, Eletrogate, Baú da Eletrônica, Curto Circuito). O CI avulso INA226AIDGSR aparece na Farnell Brasil/Portugal e na DigiKey Brasil.",
+    "sources": [
+     "https://pt.farnell.com/texas-instruments/ina226aidgsr/current-sense-amplifier-3-5khz/dp/3005354RL",
+     "https://www.digikey.com.br/pt/product-highlight/t/texas-instruments/ina226-current-shunt-and-power-monitors"
+    ],
+    "confidence": "nao_verificado",
+    "notes": "Disponibilidade e valor do shunt dos módulos vendidos no Brasil (Mercado Livre e lojas nacionais) ficam pendentes."
+   },
+   {
+    "topic": "DS18B20",
+    "item": "Faixa, exatidão, resolução e tempo de conversão",
+    "claim": "Mede de −55 a +125 °C, com exatidão de ±0,5 °C entre −10 e +85 °C. A resolução é programável de 9 a 12 bits (0,5 / 0,25 / 0,125 / 0,0625 °C). Tempo máximo de conversão: 93,75 ms (9 bits), 187,5 ms (10), 375 ms (11) e 750 ms (12 bits). VDD de 3,0 a 5,5 V, ou alimentação parasita pelo DQ. Cada sensor tem código serial único de 64 bits, o que permite vários no mesmo barramento 1-Wire.",
+    "sources": [
+     "https://www.analog.com/en/products/ds18b20.html",
+     "https://forum.digikey.com/t/analog-devices-ds18b20-1-wire-temperature-sensors/63012",
+     "https://electrokit.com/ds18b20to-92-temperaturgivare",
+     "https://html.alldatasheet.com/html-pdf/58557/DALLAS/DS18B20/553/3/DS18B20.html",
+     "https://cdn.shopify.com/s/files/1/1509/1638/files/DS18B20_KY-001_datasheet.pdf",
+     "https://wcm-cce.cldnet.analog.com/media/cn/technical-documentation/data-sheets/2812.pdf"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "A resolução de 9–12 bits e o código de 64 bits estão na página da Analog Devices. A exatidão e o tCONV vieram de cópias do datasheet e de distribuidores. Um datasheet de módulo KY-001 dá VDD mínimo de 3,3 V."
+   },
+   {
+    "topic": "DS18B20",
+    "item": "Pull-up e consumo",
+    "claim": "O circuito de aplicação usa pull-up de 4,7 kΩ entre DQ e VPU, porque o barramento é de dreno aberto/3 estados. Corrente ativa (conversão ou escrita na EEPROM): 1 mA típ., 1,5 mA máx. (VDD = 5 V). Standby: 750 nA típ., 1000 nA máx. (até +70 °C).",
+    "sources": [
+     "https://html.alldatasheet.com/html-pdf/58557/DALLAS/DS18B20/553/3/DS18B20.html",
+     "https://docs.circuit.rocks/sensors/ds18b20/",
+     "https://pdf.elecfans.com/DALLAS/DS18B20+T&R.html",
+     "https://dtsheet.com/model/1470383",
+     "https://static.rapidonline.com/pdf/73-4641_v1.pdf"
+    ],
+    "confidence": "fonte_secundaria"
+   },
+   {
+    "topic": "DS3231",
+    "item": "Exatidão",
+    "claim": "O DS3231 é um RTC com TCXO e cristal integrados. Exatidão de ±2 ppm de 0 a +40 °C e de ±3,5 ppm de −40 a +85 °C. Para referência: ±2 ppm equivale a cerca de 63 s/ano (cálculo próprio).",
+    "sources": [
+     "https://courses.physics.illinois.edu/PHYS371/sp2023/code/DS3231.pdf",
+     "https://hssn.hs-ldz.pl/datasheet/DS3231SN.pdf",
+     "https://dtsheet.com/model/1472726",
+     "https://shillehtek.com/blogs/shillehtek-product-manuals/ds3231-at24c32-iic-module-precision-rtc-module-with-cr2032-battery-manual"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "São cópias do datasheet Maxim/ADI hospedadas por terceiros. A página analog.com/en/products/ds3231 não mostrou os números."
+   },
+   {
+    "topic": "DS3231",
+    "item": "Endereço I²C e consumo",
+    "claim": "Endereço I²C de 7 bits 0x68 (1101000), fixo; em 8 bits fica D0h para escrita e D1h para leitura. Pode conflitar com outros dispositivos em 0x68, como o MPU-6050. Corrente ativa (ICCA): ≈ 200 µA a VCC = 3,63 V e 300 µA a 5,5 V. Standby (ICCS): ≈ 110 µA a 3,63 V. Da bateria (IBATT) em cronometragem: 0,84 µA típ., 3,0 µA máx. a 3,63 V.",
+    "sources": [
+     "https://dyn.manpages.debian.org/buster/freebsd-manpages/ds3231.4freebsd",
+     "https://cn.elcodis.com/parts/5861769/DS3231M_p17.html",
+     "https://tinkered.ai/components/ds3231-rtc",
+     "https://www.digikey.nl/nl/htmldatasheets/production/1799/0/0/1/ds3231s-.html",
+     "https://www.electronicsdatasheets.com/download/67593.pdf?format=pdf"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "O D0h/D1h confirmado vem do datasheet do DS3231M (variante MEMS). O 0x68 do DS3231 vem do driver FreeBSD e de fontes de terceiros."
+   },
+   {
+    "topic": "MOSFET low-side",
+    "item": "IRLZ44N",
+    "claim": "IRLZ44N (nível lógico, 55 V, 47 A): VGS máx. ±16 V; VGS(th) de 1,0 a 2,0 V. RDS(on) máximo especificado a VGS = 10 V (22 mΩ, ID = 25 A), 5 V (25 mΩ) e 4 V (35 mΩ). Não há RDS(on) especificado a 3,3 V.",
+    "sources": [
+     "https://html.alldatasheet.net/html-pdf/597525/IRF/IRLZ44NS/116/2/IRLZ44NS.html",
+     "https://www.lioncircuits.com/parts/IRLZ44NPBF",
+     "https://www.welllinkchips.com/blog/Infineon-Technologies-IRLZ44N-Product-Info.html",
+     "https://www.lcsc.com/product-detail/C38774.html",
+     "https://uk.farnell.com/infineon/irlz44npbf/mosfet-n-ch-55v-47a-to-220ab/dp/8651418"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "O valor de 35 mΩ a 4 V veio do trecho do datasheet IR do IRLZ44NS/L (mesma família). O de 25 mΩ a 5 V aparece na LCSC para o IRLZ44NPBF. Não confundir com o IRLZ44 da Vishay (60 V)."
+   },
+   {
+    "topic": "MOSFET low-side",
+    "item": "IRFZ44N",
+    "claim": "IRFZ44N (55 V): RDS(on) de 17,5 mΩ máx. a VGS = 10 V e ID = 25 A; VGS(th) de 2,0 a 4,0 V (VDS = VGS, ID = 250 µA); VGS máx. ±20 V. Não é de nível lógico e não serve para acionamento direto com 3,3 V.",
+    "sources": [
+     "https://www.mouser.com/datasheet/2/196/Infineon_AUIRFZ44N_DS_v01_02_EN-3160058.pdf",
+     "https://www.lioncircuits.com/parts/IRFZ44NSTRLPBF",
+     "https://static.datasheets.com/doc/12633973-vishay-irfz44n-ds.pdf"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "O RDS(on) e o VGS(th) vêm do datasheet Infineon do AUIRFZ44N (versão automotiva). O VGS ±20 V vem de distribuidor. O IRFZ44N da Vishay anuncia 20 mΩ."
+   },
+   {
+    "topic": "MOSFET low-side",
+    "item": "IRF520 e módulos IRF520",
+    "claim": "IRF520 (Vishay, 100 V): VGS(th) de 2,0 a 4,0 V (VDS = VGS, ID = 250 µA) e RDS(on) de 0,27 Ω máx. a VGS = 10 V, ID = 5,5 A. Os 'módulos IRF520' acionam o gate direto pelo sinal lógico. Com 3,3 V, se o VGS(th) estiver perto de 4 V o MOSFET nem conduz; nos demais casos conduz com RDS(on) alto e aquece. Vendedores recomendam limitar a ≈ 1 A em 3,3 V. Não é adequado ao ESP32 sem driver.",
+    "sources": [
+     "https://www.vishay.com/docs/91017/irf520.pdf",
+     "https://phones.sjsu.edu/people/burford.furman/docs/me106/IRF520_datasheet.pdf",
+     "https://forum.arduino.cc/t/irf520-mosfet-modul/432533",
+     "https://shillehtek.com/blogs/shillehtek-product-manuals/irf520-mosfet-driver-module-arduino-raspberry-pi-esp32-manual",
+     "https://protosupplies.com/?p=4531",
+     "https://industrialmonitordirect.com/blogs/knowledgebase/esp32-mosfet-selection-logic-level-n-channel-for-12v-loads"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "VGS(th) e RDS(on) são primários (Vishay, Rev. C, ago/2021). O comportamento dos módulos em 3,3 V vem de fontes secundárias. O VGS máx. do IRF520 não foi confirmado."
+   },
+   {
+    "topic": "MOSFET low-side",
+    "item": "AOD4184A e módulos 'D4184'",
+    "claim": "AOD4184A (AOS, 40 V, 50 A a TC = 25 °C, TO-252): RDS(on) < 7 mΩ a VGS = 10 V e < 9,5 mΩ a 4,5 V. VGS(th) 1,7 V mín., 2,1 V típ., 2,6 V máx. (ID = 250 µA). VGS máx. ±20 V. Os módulos 'D4184' (duplos) são anunciados com gatilho de 3,3–20 V, carga de 5–36 V, 15 A/400 W e PWM até 20 kHz. Mesmo assim, um vendedor e um usuário do fórum Arduino alertam que 3,3 V não saturam o gate por completo; a recomendação é driver ou 5 V.",
+    "sources": [
+     "https://www.aosmd.com/res/datasheets/AOD4184A.pdf",
+     "https://aosmd.com/products/mosfets/medium-voltage-mosfets-40v-400v/aod4184a",
+     "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/Alpha-Omega-Semicon-AOS-AOD4184A_C99124.pdf",
+     "https://futuranet.it/futurashop/image/catalog/data/Download/AOD4184A-Freescale.pdf",
+     "https://www.digikey.com.br/en/products/detail/alpha-omega-semiconductor-inc/AOD4184A/2353886",
+     "https://make.epfl.ch/storage/media/1426/Module_D4184.pdf",
+     "https://forum.arduino.cc/t/d4184-pwm-mosfet-voltage-regulation/915142",
+     "https://domoticx.net/webshop/mosfet-module-15a-400w-dual-aod4184a",
+     "https://uelectronics.com/producto/modulo-dual-mosfet-pwm-0-20khz-3-3-20v-15a-400w/"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "Os valores do MOSFET são da AOS. Os dos módulos são secundários. A DigiKey marca o AOD4184A como 'Not For New Designs'. Clones com o mesmo nome têm outros VGS(th) (Doingter: 1,2/1,8/2,5 V). Uma listagem dá gatilho de 3,3–15 V."
+   },
+   {
+    "topic": "MOSFET low-side",
+    "item": "AO3400A",
+    "claim": "AO3400A (AOS, 30 V, SOT-23): ID = 5,7 A a TA = 25 °C (4,7 A a 70 °C). RDS(on) < 26,5 mΩ a VGS = 10 V, < 32 mΩ a 4,5 V e < 48 mΩ a 2,5 V. VGS(th) de 0,65 a 1,45 V. VGS máx. ±12 V. Dos MOSFETs avaliados, é o único com RDS(on) garantido abaixo de 3,3 V, o que permite acionamento direto pelo ESP32.",
+    "sources": [
+     "https://www.aosmd.com/res/datasheets/AO3400A.pdf",
+     "https://www.radiolocman.com/datasheet/pdf.html?di=174015",
+     "https://static.chipdip.ru/lib/825/DOC012825288.pdf"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "Datasheet AOS Rev 3.1 (jul/2023). O AO3400 sem 'A' tem limites diferentes. Cálculo próprio: na carga de 16 W (1,33 A) a perda é ≈ 1,33² × 0,048 ≈ 85 mW no pior caso a 2,5 V; o encapsulamento SOT-23 exige cuidado térmico."
+   },
+   {
+    "topic": "MOSFET low-side",
+    "item": "IRLB8721",
+    "claim": "IRLB8721PbF (30 V, 62 A a TC = 25 °C, TO-220): RDS(on) de 6,5 mΩ típ. e 8,7 mΩ máx. a VGS = 10 V (ID = 31 A); 13,1 mΩ típ. e 16 mΩ máx. a 4,5 V (ID = 25 A). VGS(th) 1,35 V mín., 1,80 V típ., 2,35 V máx. (ID = 25 µA). VGS máx. ±20 V. Não há RDS(on) especificado a 3,3 V.",
+    "sources": [
+     "https://circuits.mit.edu/_static/F24/labs/audio_amp/IRLB8721_datasheet.pdf",
+     "https://www.radiolocman.com/datasheet/pdf.html?di=167931",
+     "https://manualmachine.com/infineon/irlb8721/24838868-datasheet"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "São cópias do datasheet IR/Infineon fora do domínio do fabricante. Um wiki comunitário diz que 'aciona com 3,3 V', mas isso não é especificação."
+   },
+   {
+    "topic": "MOSFET low-side",
+    "item": "Síntese para acionamento com 3,3 V",
+    "claim": "IRLZ44N, IRLB8721 e AOD4184A têm VGS(th) máximo (2,0 / 2,35 / 2,6 V) abaixo de 3,3 V, mas o RDS(on) deles só é especificado a partir de 4 a 4,5 V. Com gate em 3,3 V, a condução não tem garantia de datasheet. IRF520 e IRFZ44N (VGS(th) até 4 V) não servem. Opções: AO3400A (RDS(on) garantido a 2,5 V) ou driver de gate (TC4427 alimentado em 12 V) com qualquer um dos MOSFETs de nível lógico.",
+    "sources": [
+     "https://www.aosmd.com/res/datasheets/AO3400A.pdf",
+     "https://www.aosmd.com/res/datasheets/AOD4184A.pdf",
+     "https://www.vishay.com/docs/91017/irf520.pdf",
+     "https://circuits.mit.edu/_static/F24/labs/audio_amp/IRLB8721_datasheet.pdf",
+     "https://html.alldatasheet.net/html-pdf/597525/IRF/IRLZ44NS/116/2/IRLZ44NS.html"
+    ],
+    "confidence": "nao_verificado",
+    "notes": "Análise própria a partir dos valores acima. Para validar o RDS(on) a 3,3 V, use as curvas típicas ou meça a queda VDS com a carga nominal."
+   },
+   {
+    "topic": "Optoacoplador",
+    "item": "PC817: CTR e corrente de LED",
+    "claim": "PC817 sem classe: CTR de 50% a 600% a IF = 5 mA e VCE = 5 V. Classes: A 80–160%, B 130–260%, C 200–400%, D 300–600% (um fabricante, Juxing, usa 100–160% para a classe A). IF máx. absoluto: 50 mA (pico de 1 A). VF: 1,2 V típ., 1,4 V máx. a IF = 20 mA. VCE(sat): 0,1 V típ., 0,2 V máx. (IF = 20 mA, IC = 1 mA). ICEO ≤ 100 nA a VCE = 20 V. Isolação de 5 kVrms. A condição de teste do CTR (IF = 5 mA) serve de referência para a corrente de LED.",
+    "sources": [
+     "https://www.alldatasheet.net/html-pdf/43371/SHARP/PC817/253/2/PC817.html",
+     "https://www.makerhero.com/wp-content/uploads/2025/10/PC817-Datasheet.pdf",
+     "https://www.radiolocman.com/datasheet/data.html?di=643113",
+     "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2309131012_JUXING-JPC817_C5365399.pdf",
+     "https://www.stacken.kth.se/~haba/slamra/dcc/ackdetect/PC817.pdf",
+     "https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/8886/PC817X.pdf",
+     "https://datasheetq.com/pdf-html/556206/Sharp/4page/PC817X.html"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Cálculo próprio: GPIO a 3,3 V com resistor de 330 Ω dá IF ≈ (3,3 − 1,2)/330 ≈ 6,4 mA. Uma tabela Sharp dá VCEO = 80 V, valor conflitante (ver pendências)."
+   },
+   {
+    "topic": "Driver de gate",
+    "item": "TC4427: limiar de entrada",
+    "claim": "Família Microchip TC4426/7/8 (o TC4427 é o duplo não inversor): VIH mín. 2,4 V e VIL máx. 0,8 V, com VDD de 4,5 a 18 V. Uma nota diz que nos dispositivos de faixa de temperatura V o VIH mín. é 2,0 V. Uma saída de 3,3 V do ESP32 (VOH ≥ 2,64 V) aciona a entrada com cerca de 0,24 V de margem sobre os 2,4 V no pior caso de VOH.",
+    "sources": [
+     "https://ee6131b.mit.edu/document/tc4426.pdf",
+     "https://datasheetq.com/pdf-html/2621-2001/Microchip/3page/TC4426.html",
+     "https://html.alldatasheet.net/html-pdf/195308/MICROCHIP/TC4427M/1470/3/TC4427M.html",
+     "https://static.chipdip.ru/lib/986/DOC003986575.pdf"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "São cópias do datasheet Microchip (Rev. A e E). A margem é cálculo próprio com VOH mín. do ESP32 = 2,64 V (fonte secundária)."
+   },
+   {
+    "topic": "Driver de gate",
+    "item": "TC4427: alimentação, corrente de pico e consumo",
+    "claim": "TC4427: driver duplo com 1,5 A de pico e VDD de 4,5 a 18 V. Tempos de subida/descida < 30 ns com 1000 pF (fonte comunitária). Corrente de alimentação na versão sem 'A': 4,5 mA máx. com as entradas em nível alto e 0,4 mA com as entradas em nível baixo. Na TC4427A: 1,0 mA típ. / 2,0 mA máx. (entradas altas) e 0,1 / 0,2 mA (entradas baixas).",
+    "sources": [
+     "https://microchip.com/en-us/product/TC4427",
+     "https://kr.rs-online.com/web/p/gate-drivers/0352265",
+     "https://en.eeworld.com.cn/datasheet/view/10576202.html",
+     "https://www.lcsc.com/product-detail/C636890.html",
+     "https://pdf.elecfans.com/ACTEL/TC4426ACPA.html",
+     "https://wiki.adom.inc/ray/tc4427"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "18 V e 1,5 A estão na página da Microchip. As correntes de alimentação vêm de cópias do datasheet. Cálculo próprio: em 12 V a versão sem 'A' consome até ≈ 54 mW com as entradas altas."
+   },
+   {
+    "topic": "Conversor CC-CC",
+    "item": "MP1584",
+    "claim": "MP1584 (MPS): VIN de operação de 4,5 a 28 V; máximo absoluto de −0,3 a +30 V. Saída de 3 A, frequência programável de 100 kHz a 1,5 MHz, corrente quiescente de operação de 100 µA. O PDF da MPS traz a marca 'not recommended for new designs'.",
+    "sources": [
+     "https://www.monolithicpower.com/pub/media/document/MP1584_r1.1.pdf",
+     "https://docs.rs-online.com/b924/A700000013716646.pdf",
+     "https://static6.arrow.com/aropdfconversion/fcc83b3ea533382cd0c690fc81d08009fd0e6d12/mp1584en-lf-z.pdf",
+     "https://www.utmel.com/components/mp1584en-step-down-converter-datasheet-pinout-and-circuit?id=241"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "A margem entre 28 V de operação e 30 V absolutos é pequena. Os módulos genéricos 'MP1584' podem usar clones; o substituto (MP2338) foi citado por fonte secundária."
+   },
+   {
+    "topic": "Conversor CC-CC",
+    "item": "LM2596",
+    "claim": "LM2596 (TI): VIN até 40 V, saída de 3 A, oscilador fixo de 150 kHz (127–173 kHz). Corrente quiescente de 5 mA típ. e 10 mA máx.; em standby, 80 µA típ. e 200 µA máx. Os módulos genéricos anunciam ≈ 10 mA sem carga e eficiência de 66–86% (medida por um vendedor).",
+    "sources": [
+     "https://www.ti.com/product/LM2596",
+     "https://hippo.fel.cvut.cz/katalog/pdf/2596.pdf",
+     "https://www.onsemi.com/download/data-sheet/pdf/Lm2596-d.pdf",
+     "https://www.lcsc.com/product-detail/C53433730.html",
+     "https://sparks.gogo.co.nz/assets/_site_/downloads/HW-732_LM2596HVS_CC_CV_Buck_Module-Details-joined.pdf",
+     "https://cdn.shopify.com/s/files/1/1509/1638/files/AZ-LM2596S_datasheet.pdf",
+     "https://www.electroniclinic.com/m2596-constant-current-constant-voltage-adjustable-buck-module/"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "VIN e standby estão na página da TI; a Iq de 5/10 mA vem de cópia do datasheet. Os valores dos módulos são secundários. Clones como o HGSEMI informam 2 mA. Cálculo próprio: a Iq do CI sozinha custa ≈ 60–130 mW em 12–13 V."
+   },
+   {
+    "topic": "Conversor CC-CC",
+    "item": "Pololu D24V5F5",
+    "claim": "Pololu D24V5F5 (5 V, 500 mA): entrada até 36 V; a página de especificações dá 5,1 V como tensão mínima de operação. Corrente sem carga com o regulador habilitado: ≤ 0,2 mA. Desabilitado, a corrente é proporcional à VIN (360 µA a 36 V). Eficiência típica de 80–93%, segundo revendedor.",
+    "sources": [
+     "https://www.pololu.com/product/2843/specs",
+     "https://www.pololu.com/product/2843",
+     "https://core-electronics.com.au/catalog/product/view/sku/POLOLU-2843",
+     "https://forum.pololu.com/t/pololu-5v-500ma-step-down-voltage-regulator-d24v5f5-quiescent-current-consumption-inquiry/10369"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "VIN e Iq vêm da página da Pololu, lidos em trechos de busca. A faixa de eficiência é de revendedor. 500 mA a 5 V atende o ESP32 (≥ 500 mA em 3,3 V após o LDO), mas com pouca folga."
+   },
+   {
+    "topic": "Proteção TVS",
+    "item": "SMBJ16A",
+    "claim": "SMBJ16A (Littelfuse, 600 W em 10/1000 µs, unidirecional, DO-214AA): VRWM = 16 V; VBR de 17,8 V mín. a 19,7 V máx.; VC = 26,0 V máx. com IPP = 23,1 A.",
+    "sources": [
+     "https://www.futureelectronics.com/p/electromechanical--circuit-protection--tvs-diodes/smbj16a-littelfuse-5157345",
+     "https://uk.farnell.com/littelfuse/smbj16a/tvs-diode-600w-16v-unidir-do-214aa/dp/2777261",
+     "https://octopart.com/part/littelfuse/SMBJ16A",
+     "https://e2e.ti.com/cfs-file/__key/communityserver-discussions-components-files/196/Littelfuse_5F00_TVS_5F00_Diode_5F00_SMBJ_5F00_Datasheet.pdf_2D00_1108540.pdf"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Os valores vêm de distribuidores para a peça Littelfuse. O SMBJ16 sem 'A' tem VBR mín. de 16,88 V."
+   },
+   {
+    "topic": "Proteção TVS",
+    "item": "SMBJ18A",
+    "claim": "SMBJ18A (600 W em 10/1000 µs, unidirecional): VRWM = 18 V; VBR de 20,0 V mín. a 22,1 V máx.; VC = 29,2 V máx. com IPP = 20,6 A; IR ≤ 5 µA a VRWM.",
+    "sources": [
+     "https://www.digikey.my/en/products/detail/littelfuse-inc/SMBJ18A/285984",
+     "https://il.farnell.com/littelfuse/smbj18a/diode-tvs-18v-600w-5-uni-smb/dp/1827612",
+     "https://www.mccsemi.com/products/protection-devices/tvs/SMBJ18A",
+     "https://en.semiware.com/product-general-tvs/smbj18a",
+     "https://trace-tec.vn/SMBJ18A-pe151900.html"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "O clone JSCJ CJSMBJ18A informa VC = 28,9 V."
+   },
+   {
+    "topic": "Proteção TVS",
+    "item": "Escolha entre SMBJ16A e SMBJ18A",
+    "claim": "O clamp do SMBJ16A (26 V) fica abaixo dos limites dos componentes: MP1584 (30 V absolutos), AO3400A (VDS 30 V), Pololu (36 V), INA226 (36 V) e LM2596 (40 V). O SMBJ18A grampeia em 29,2 V, a apenas 0,8 V dos 30 V do MP1584 e do AO3400A. Em compensação, o VRWM de 16 V do SMBJ16A precisa ficar acima da tensão máxima de carga do MPPT para LiFePO4 4S (não verificada aqui, tipicamente 14,2–14,6 V).",
+    "sources": [
+     "https://www.futureelectronics.com/p/electromechanical--circuit-protection--tvs-diodes/smbj16a-littelfuse-5157345",
+     "https://www.digikey.my/en/products/detail/littelfuse-inc/SMBJ18A/285984",
+     "https://www.monolithicpower.com/pub/media/document/MP1584_r1.1.pdf",
+     "https://www.aosmd.com/res/datasheets/AO3400A.pdf"
+    ],
+    "confidence": "nao_verificado",
+    "notes": "Análise própria. Um TVS no lado do FV, onde o Voc de um painel de 36 células é tipicamente cerca de 21–22 V (não verificado), conduziria com SMBJ16A ou SMBJ18A. Use o TVS só no barramento da bateria/cargas."
+   },
+   {
+    "topic": "ESP32",
+    "item": "Pinos de strapping",
+    "claim": "GPIO0: pull-up interno; em nível baixo no reset entra em modo de download serial. GPIO2: pull-down; precisa estar flutuante ou em nível baixo para o download (é ignorado no boot normal). GPIO12 (MTDI): pull-down; em nível alto no reset seleciona VDD_SDIO = 1,8 V, o que causa brown-out na flash de 3,3 V do WROOM-32 e falha de boot. GPIO15 (MTDO): pull-up; em nível baixo silencia o log do bootloader da ROM. GPIO5: pull-up; junto com o GPIO15, define o timing do SDIO escravo. O GPIO4 aparece no registrador de strap, mas não afeta os modos de boot.",
+    "sources": [
+     "https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html",
+     "https://www.flux.ai/vasy_skral/esp32-wroom-32d~o5t/files",
+     "https://esp32.com/viewtopic.php?p=36590"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "GPIO0, 2, 12 e 15 estão no esptool (Espressif). Os pull-ups/pull-downs padrão e o GPIO5 vêm de resumo de terceiros (flux.ai). Implicação: um pull-down de gate de MOSFET em GPIO0 força o modo download; em GPIO12 não atrapalha; em GPIO15 apenas silencia o log. Evite pull-up externo no GPIO12."
+   },
+   {
+    "topic": "ESP32",
+    "item": "Pinos só de entrada e pinos da flash",
+    "claim": "GPIO34, 35, 36 e 39 são só de entrada e não têm pull-up nem pull-down internos (exigem resistor externo). No WROOM-32, GPIO6 a GPIO11 estão ligados à flash SPI interna e não podem ter outro uso. A Espressif não recomenda WROOM-32, 32D e 32U para projetos novos e indica o WROOM-32E/32UE, que não expõe GPIO6–11.",
+    "sources": [
+     "https://docs.espressif.com/projects/esp-faq/en/latest/software-framework/peripherals/gpio.html",
+     "https://esp-idf-zh.readthedocs.io/zh-cn/zh/api-reference/peripherals/gpio.html",
+     "https://randomnerdtutorials.com/esp32-pinout-reference/"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "GPIO34–39 servem bem para o ALERT do INA226 (dreno aberto, com pull-up externo para 3,3 V)."
+   },
+   {
+    "topic": "ESP32",
+    "item": "Corrente por GPIO",
+    "claim": "Corrente por GPIO: IOH ≈ 40 mA (com VOH > 2,64 V e drive strength máximo) e IOL ≈ 28 mA (com VOL = 0,495 V). Pull-up/pull-down internos de ≈ 45 kΩ. O total de todos os pinos é citado como 1200 mA.",
+    "sources": [
+     "https://docs.deneyapkart.org/en/Cards/Deneyap-Kart/Electrical-Specifications-esp32.md",
+     "https://deneyapkart.org/en/docs/elektriksel-ozellikler-esp32-2",
+     "https://esp32.com/viewtopic.php?p=25382"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "É espelho da tabela de características DC do datasheet ESP32; o original não foi acessado. Para gate de MOSFET, use resistor série (por exemplo 100 Ω) e pull-down de cerca de 100 kΩ (recomendação de projeto, não verificada)."
+   },
+   {
+    "topic": "ESP32",
+    "item": "Consumo com Wi-Fi",
+    "claim": "Correntes do ESP32 em RF: TX 802.11b a 1 Mbps e 19,5 dBm ≈ 240 mA; TX 802.11g a 54 Mbps e 16 dBm ≈ 190 mA; TX 802.11n MCS7 a 14 dBm ≈ 180 mA; RX 802.11b/g/n ≈ 95–100 mA. Modem-sleep a 240 MHz: ≈ 30–68 mA (o valor de 20 mA é de modo de teste). Medições de fórum: um DevKit conectado ao Wi-Fi consome ≈ 40 mA médios com picos de ≈ 150 mA a cada 100 ms; em modo AP, 130–160 mA.",
+    "sources": [
+     "https://docs.deneyapkart.org/en/Cards/Deneyap-Kart/Power-Consumption-esp32.md",
+     "https://mischianti.org/2021/03/06/esp32-practical-power-saving-manage-wifi-and-cpu-1",
+     "https://hubble.com/community/guides/esp32-power-modes-explained-what-the-datasheet-tells-you-and-what-it-doesn-t/",
+     "https://cdn.sparkfun.com/assets/learn_tutorials/8/5/2/esp32_datasheet_en.pdf",
+     "https://esp32.com/viewtopic.php?p=12554"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "A tabela RF não foi lida no PDF oficial da Espressif, só em espelho."
+   },
+   {
+    "topic": "ESP32",
+    "item": "Alimentação do módulo WROOM-32/32E",
+    "claim": "Módulo WROOM-32/32E: alimentação de 3,0 a 3,6 V. A fonte precisa entregar no mínimo 500 mA. O datasheet do WROOM-32 informa corrente média de operação de 80 mA.",
+    "sources": [
+     "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf",
+     "https://academy.cba.mit.edu/classes/networking_communications/ESP32/esp32-wroom-32_datasheet_en.pdf",
+     "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf",
+     "https://esp32.com/viewtopic.php?p=85045"
+    ],
+    "confidence": "verificado_fonte_primaria"
+   },
+   {
+    "topic": "ESP32",
+    "item": "ADC (não linearidade e restrições)",
+    "claim": "O ESP32 tem 2 ADCs SAR de 12 bits e 18 canais. O ADC2 não pode ser usado (ou sofre colisão) com o Wi-Fi ativo. A Vref nominal é 1100 mV, mas varia de 1000 a 1200 mV entre chips. Faixas sugeridas: 0 dB, 100–950 mV; 2,5 dB, 100–1250 mV; 6 dB, 150–1750 mV; 11 dB, 150–2450 mV. A resposta é não linear perto de 0 V e acima de ≈ 2,45 V; a calibração usa eFuse (dois pontos ou Vref) mais uma tabela para a região não linear em 11 dB. Conclusão: tensões e correntes de potência devem ser medidas pelos INA226, não pelo ADC interno.",
+    "sources": [
+     "https://docs.espressif.com/projects/esp-idf/en/v4.3.1/esp32/api-reference/peripherals/adc.html",
+     "https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/peripherals/adc/index.html",
+     "https://docs.espressif.com/projects/esp-idf/zh_CN/v4.4.5/esp32s2/api-reference/peripherals/adc.html",
+     "https://docs.espressif.com/projects/rust/esp-hal/1.2.0/esp32/esp_hal/analog/adc/struct.AdcCalLine.html",
+     "https://esp-idf.readthedocs.io/en/v3.3/api-reference/peripherals/adc.html",
+     "https://forum.arduino.cc/t/fixing-the-non-linear-adc-of-an-esp32/699190"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "A tabela de 150–2450 mV para o ESP32 apareceu numa página de documentação do IDF v4.4.5 (seção do ESP32-S2 que lista os valores por SoC). Os valores de DNL/INL não foram confirmados."
+   },
+   {
+    "topic": "ESP32",
+    "item": "DevKitC V4: alimentação e diodo VBUS/5V",
+    "claim": "A Espressif lista três entradas de alimentação no DevKitC V4: micro-USB (padrão), pinos 5V/GND e pinos 3V3/GND. Elas são mutuamente exclusivas: usar mais de uma ao mesmo tempo pode danificar a placa ou a fonte. Fontes secundárias indicam um diodo Schottky entre o VBUS do USB e o trilho de 5 V (BAT760-7, designado D3 no esquemático V4), que impediria corrente reversa do 5 V externo para o USB.",
+    "sources": [
+     "https://docs.espressif.com/projects/esp-idf/en/v3.2.5/get-started/get-started-devkitc.html",
+     "https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32/esp32-devkitc/user_guide.html",
+     "https://dl.espressif.com/dl/schematics/esp32_devkitc_v4_sch.pdf",
+     "https://esp32.com/viewtopic.php?p=69356",
+     "https://forum.allaboutcircuits.com/threads/178105",
+     "https://www.scribd.com/document/435455899/esp32-devkitc-v4-sch-pdf"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "A exclusividade é primária (Espressif). O diodo é secundário (fórum e texto extraído do esquemático) e fica pendente. Placas 'DevKit' clones (DOIT, NodeMCU-32S) podem não ter o diodo."
+   },
+   {
+    "topic": "ESP32",
+    "item": "Regulador LDO do DevKitC",
+    "claim": "O DevKitC V4 regula 5 V → 3,3 V com um LDO (tipo AMS1117). A corrente quiescente desse LDO é de ≈ 5 mA, e o LED de alimentação fica sempre aceso. Por isso o consumo da placa fica bem acima do consumo do módulo, inclusive em deep sleep.",
+    "sources": [
+     "https://lucidar.me/en/esp32/power-consumption-of-esp32-devkitc-v4/",
+     "https://esp32.com/viewtopic.php?p=76989",
+     "https://docs.cirkitdesigner.com/component/2e4b5046-750b-484e-b3cb-737562aed51d/ams1117-33"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Com LDO, a potência de entrada é 5 V × I(3,3 V): cerca de 34% se perde no LDO."
+   },
+   {
+    "topic": "Potência auxiliar",
+    "item": "Sensores (3× INA226, DS18B20, DS3231)",
+    "claim": "Estimativa própria em 3,3 V: 3 INA226 consomem 3 × 330 µA ≈ 1 mA (≈ 3,3 mW; 4,2 mW máx.). O DS18B20 consome ≤ 1,5 mA durante a conversão (≤ 5 mW) e ≈ 2,5 µW em standby. O DS3231 consome ≈ 200 µA (≈ 0,7 mW). Total dos sensores: < 10 mW, desprezível diante do ESP32.",
+    "sources": [
+     "https://www.ti.com/product/ina226",
+     "https://pdf.elecfans.com/DALLAS/DS18B20+T&R.html",
+     "https://www.digikey.nl/nl/htmldatasheets/production/1799/0/0/1/ds3231s-.html"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Cálculo próprio a partir dos valores verificados. Não inclui LEDs de módulos (DS3231 ZS-042, INA226), que podem somar alguns mA."
+   },
+   {
+    "topic": "Potência auxiliar",
+    "item": "Estimativa total (ESP32 + buck + sensores)",
+    "claim": "Estimativa própria com buck 12 V → 5 V e DevKitC (LDO). Com Wi-Fi sempre recebendo (sem power save, ≈ 100 mA no 3,3 V) mais LDO, LED e sensores (≈ 10 mA), a placa consome ≈ 0,55 W em 5 V. Com eficiência do buck assumida de 85%, isso dá ≈ 0,65 W em 12–13 V. Com modem-sleep/DTIM (30–68 mA): ≈ 0,2–0,45 W. Para o LM2596, some a Iq de 5–10 mA × 13 V (≈ 0,06–0,13 W); MP1584 (100 µA) e Pololu (≤ 0,2 mA) acrescentam < 3 mW. Um TC4427 sem 'A' acrescenta até ≈ 54 mW. Faixa provável: 0,3 a 0,9 W, nominal ≈ 0,6–0,7 W. Isso equivale a ≈ 7–22 Wh/dia contra 76,8 Wh da bateria (12,8 V × 6 Ah).",
+    "sources": [
+     "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf",
+     "https://docs.deneyapkart.org/en/Cards/Deneyap-Kart/Power-Consumption-esp32.md",
+     "https://mischianti.org/2021/03/06/esp32-practical-power-saving-manage-wifi-and-cpu-1",
+     "https://lucidar.me/en/esp32/power-consumption-of-esp32-devkitc-v4/",
+     "https://www.ti.com/product/LM2596",
+     "https://www.monolithicpower.com/pub/media/document/MP1584_r1.1.pdf",
+     "https://www.pololu.com/product/2843/specs",
+     "https://esp32.com/viewtopic.php?p=12554"
+    ],
+    "confidence": "nao_verificado",
+    "notes": "Estimativa derivada. A eficiência de 85% do buck em carga leve (≈ 0,5 W) não foi verificada; em módulos LM2596 pode ficar entre 66 e 86%. Recomendo medir a potência auxiliar real, por exemplo com um 4º INA226 na entrada do buck ou com o próprio INA226 das cargas."
+   }
+  ],
+  "open_issues": [
+   "O WebFetch para www.ti.com falhou (domínio fora da rede permitida). Nenhum PDF foi aberto; todos os valores vêm de trechos do WebSearch. Para validar direto nos PDFs, é preciso liberar www.ti.com, analog.com, espressif.com, aosmd.com, vishay.com, infineon.com, microchip.com e littelfuse.com nas configurações de rede da sessão.",
+   "INA226: confirmar as linhas A1=SDA e A1=SCL da Tabela 6-2 (0x48–0x4F) no datasheet SBOS547 (Rev. B/C); só as linhas A1=GND e A1=VS apareceram nos trechos.",
+   "INA226: confirmar o erro de ganho da tensão de barramento, o erro total de corrente/potência e a escala do registrador Alert Limit (07h) para cada função (SOL/SUL/BOL/BUL/POL).",
+   "INA226: a TI lista a Rev. C do datasheet; conferir se algum valor mudou em relação à Rev. B (set/2024).",
+   "Módulos INA226 no Brasil: confirmar disponibilidade e o shunt dos módulos GY-INA226/CJMCU-226 vendidos aqui (R100, R010 ou R002). Medir a resistência efetiva: um módulo R010 mediu 0,021 Ω.",
+   "Módulos INA226: a corrente máxima prática das trilhas e bornes (5–8 A) é estimativa de blog. Validar se a PCB aguenta a corrente do FV e da bateria ou usar shunt externo.",
+   "Painel FV de 50 W/36 células: Isc, Imp e Voc não foram verificados nesta tarefa; são necessários para dimensionar o shunt do INA226 do FV e o posicionamento do TVS.",
+   "Controlador MPPT: confirmar no manual a tensão máxima de carga/equalização para LiFePO4 (tipicamente 14,2–14,6 V, não verificado) antes de escolher SMBJ16A (VRWM 16 V) ou SMBJ18A.",
+   "DS18B20 e DS3231: validar exatidão, tCONV, endereço e correntes no datasheet oficial da Analog Devices (analog.com); usei espelhos de terceiros.",
+   "DS18B20: sondas à prova d'água baratas frequentemente usam clones ou falsificações com exatidão diferente; não verificado.",
+   "Módulos DS3231 (ZS-042): presença de EEPROM AT24C32 (provável endereço 0x57) e do circuito de carga da CR2032 não verificados.",
+   "IRLZ44N: os 35 mΩ a VGS = 4 V vieram do datasheet IRLZ44NS/L; confirmar no datasheet do IRLZ44NPbF (Infineon).",
+   "MOSFETs: além do AO3400A (2,5 V), nenhum tem RDS(on) especificado a VGS = 3,3 V. Validar com as curvas típicas de saída ou medindo VDS com a carga nominal.",
+   "IRF520: VGS máximo (provavelmente ±20 V) não confirmado.",
+   "AOD4184A: status NRND, e clones com o mesmo nome têm VGS(th) diferentes. Nos módulos D4184, verificar qual MOSFET está montado, o resistor de gate e o pull-down.",
+   "PC817: VCEO conflitante entre revisões/fabricantes (80 V em uma tabela Sharp; outras revisões podem dar 35 V). Tempos de resposta (tr/tf) não verificados, o que limita PWM através do opto.",
+   "TC4427: o VIH mín. de 2,4 V veio de espelhos do datasheet Microchip (DS21422); confirmar no documento oficial e o grau de temperatura (a nota sobre os 2,0 V da faixa V é ambígua).",
+   "Pololu D24V5F5: confirmar na página oficial a tensão mínima de entrada (5,1 V informado) e a corrente sem carga (≤ 0,2 mA).",
+   "MP1584: os módulos genéricos podem usar clones. O substituto citado (MP2338) não foi confirmado com a MPS.",
+   "LM2596: clones (HGSEMI etc.) têm Iq diferente (2 mA). O no-load de ≈ 10 mA dos módulos é alegação de vendedor.",
+   "SMBJ16A/SMBJ18A: confirmar VBR, VC, IPP e IR no datasheet Littelfuse (rev. 06/03/20) ou do fabricante efetivamente comprado.",
+   "ESP32: confirmar a tabela de consumo RF (240/190/180 mA TX; 95–100 mA RX) no datasheet oficial ESP32/WROOM-32E ('RF Current Consumption in Active Mode').",
+   "ESP32: confirmar IOH = 40 mA, IOL = 28 mA e o total de 1200 mA na tabela de características DC do datasheet oficial.",
+   "ESP32: DNL/INL do ADC não confirmados.",
+   "ESP32: o comportamento dos GPIOs no boot (glitches ou PWM em alguns pinos, como GPIO1, 3, 5, 14 e 15) não foi verificado; é relevante para não ligar cargas indevidamente no reset.",
+   "ESP32-DevKitC V4: confirmar no esquemático oficial (dl.espressif.com/dl/schematics/esp32_devkitc_v4_sch.pdf) a existência, a orientação e a peça do diodo VBUS → 5V; placas clone podem não ter diodo.",
+   "Potência auxiliar: a eficiência real do buck em carga leve e o consumo médio do ESP32 com o firmware real precisam de medição; a faixa de 0,3–0,9 W é estimativa."
+  ]
+ },
+ {
+  "key": "precos_bom",
+  "findings": [
+   {
+    "topic": "BOM - Geração FV",
+    "item": "Painel FV 50 W 12 V rígido (Resun / Sinosola / Yingli)",
+    "claim": "No Mercado Livre, painéis rígidos de 50 W aparecem entre R$ 250,00 e R$ 279,99: Resun 50 W 'Inmetro' R$ 259,00; Resun 50 W 12V/18V 'Inmetro' R$ 279,99; Sinosola SA 50 W 12 V R$ 250,00 (12x) e R$ 268,00. Um anúncio Yingli de 50 W aparece por R$ 405,00. Faixa recomendada para a BOM: R$ 250 a R$ 280.",
+    "sources": [
+     "https://lista.mercadolivre.com.br/painel-solar-50w",
+     "https://lista.mercadolivre.com.br/painel-solar-fotovoltaico-50w",
+     "https://lista.mercadolivre.com.br/placa-solar-50w",
+     "https://produto.mercadolivre.com.br/MLB-3400407607-painel-solar-resun-50w-para-eletrificadores-de-cerca-rural-_JM",
+     "https://lista.mercadolivre.com.br/painel-solar-yingli-solar"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Os anúncios não mostram data. Os valores foram obtidos pelo buscador em 05/11/2026. Houve um anúncio fora da curva a R$ 1.250,00, que foi descartado. Não foi confirmado nenhum dado elétrico: nº de células (36), Voc, Vmp e Isc precisam ser conferidos na etiqueta ou no datasheet antes da compra. O frete não está incluído."
+   },
+   {
+    "topic": "BOM - Geração FV",
+    "item": "Painel 50 W genérico com 'saída dupla 12V/5V' (evitar)",
+    "claim": "Um anúncio de painel '50 W 12V/5V monocristalino, saída dupla' custa R$ 260,91 no Mercado Livre. O próprio anúncio informa corrente de trabalho de 1,4 A. Isso indica potência real bem abaixo de 50 W (cerca de 17 W a 12 V), por isso não é recomendado.",
+    "sources": [
+     "https://produto.mercadolivre.com.br/MLB-1324666974-50w-12v5v-painel-solar-de-silicio-monocristalino-saida-dupl-_JM"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "A estimativa de cerca de 17 W é uma conta simples sobre o dado do anúncio (1,4 A × 12 V), não um valor medido. O anúncio não mostra data."
+   },
+   {
+    "topic": "BOM - Geração FV",
+    "item": "Painéis flexíveis 50 W (Minha Casa Solar / NeoSolar)",
+    "claim": "Minha Casa Solar: o Enernit Solar Leaf ES 50W (flexível) é listado com Pmax 50,41 Wp, Vmp 12,03 V, Isc 4,43 A e 44 células. Com Vmp de 12,03 V ele é inadequado para carregar LiFePO4 12,8 V, que absorve a cerca de 14,2–14,6 V. NeoSolar: o ZTROON ZTF-50M/ZTF-50MT é listado com 32 células, Pmax 50 W e Vmp 18,62 V. A busca não retornou o preço de nenhum dos dois.",
+    "sources": [
+     "https://www.minhacasasolar.com.br/painel-solar-flexivel-50w-monocristalino-enernit-solar-leaf-es-50w-83457",
+     "https://www.neosolar.com.br/loja/placa-solar-flexivel-50w-monocristalina-ztroon-ztf-50mt.html",
+     "https://www.neosolar.com.br/loja/placa-solar-flexivel-50w-monocristalina-ztroon-zt-50m.html"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Os dados elétricos vêm das páginas das lojas, não do datasheet do fabricante. Os preços ficaram pendentes."
+   },
+   {
+    "topic": "BOM - Geração FV",
+    "item": "Painel Renogy 50 W 12 V (Amazon.com.br)",
+    "claim": "O painel rígido monocristalino Renogy 50 W 12 V é listado na Amazon.com.br. O resultado da busca não trouxe o preço.",
+    "sources": [
+     "https://www.amazon.com.br/Renogy-50W-Monocrystalline-Solar-Panel/dp/B00DVPPFDS"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "O preço ficou pendente. Pode ser venda internacional, com imposto de importação."
+   },
+   {
+    "topic": "BOM - Controlador de carga",
+    "item": "Victron SmartSolar MPPT 75/10 (SCC075010060R)",
+    "claim": "Na Amazon.com.br o anúncio sai por R$ 434,70, com 3 unidades em estoque no momento da captura. O anúncio indica o part number SCC075010060R: 75 V de entrada, 10 A, 12/24 V, Bluetooth.",
+    "sources": [
+     "https://www.amazon.com.br/Victron-SmartSolar-MPPT-75-Controlador/dp/B075NTT8GH"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "O anúncio não mostra data e foi capturado pelo buscador em 05/11/2026. Não está claro se o vendedor é nacional ou internacional (sujeito a importação). Cuidado para não confundir com o BlueSolar MPPT 75/10 (SCC010010050R, sem Bluetooth), também vendido na Amazon.com.br via Aldo Solar: https://www.amazon.com.br/Controlador-bateria-solar-scc010010050r-bluesolar/dp/B018M88G5C. Não foi encontrado preço em NeoSolar, Minha Casa Solar ou revendedor oficial Victron no Brasil."
+   },
+   {
+    "topic": "BOM - Controlador de carga",
+    "item": "Victron SmartSolar MPPT 75/10 - referência internacional",
+    "claim": "Para comparação, o preço internacional fica entre € 63,72 com IVA (solarkontor.de, Alemanha) e US$ 62–76 (revendedores dos EUA). O preço de R$ 434,70 no Brasil é compatível com um produto importado.",
+    "sources": [
+     "https://solarkontor.de/en/products/victron-smartsolar-mppt-75-10-bluetooth-integriert",
+     "https://renewableoutdoors.com/products/victron-smartsolar-mppt-75-10-solar-charge-controller",
+     "https://www.solar-wind.co.uk/victron-smartsolar-mppt-charge-controller-10a-75v"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Valor apenas de referência, sem conversão cambial nem impostos."
+   },
+   {
+    "topic": "BOM - Controlador de carga",
+    "item": "EPEver Tracer 1210AN (10 A, 12/24 V)",
+    "claim": "Anúncios no Mercado Livre intitulados 'Controlador Carga Mppt 10a 12v/24v Epever Tracer 1210an 100v' custam R$ 498,00 (12x de R$ 41,50, com frete grátis; outro anúncio a R$ 498,00 em 10x de R$ 49,80). Um Epever Xtra 1210N, que é outro modelo, aparece a R$ 512,00.",
+    "sources": [
+     "https://lista.mercadolivre.com.br/controlador-de-carga-epever-tracer",
+     "https://eletronicos.mercadolivre.com.br/controlador-de-carga-mppt-epever",
+     "https://lista.mercadolivre.com.br/controlador-carga-mppt-epever",
+     "https://lista.mercadolivre.com.br/controlador-de-carga-solar-10a-mppt"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Os anúncios não mostram data. A entrada de 100 V aparece só no título do anúncio. A versão (AN ou AN G3) e o suporte a LiFePO4 precisam ser conferidos no datasheet EPEver. A página da NeoSolar sobre a série Tracer AN não mostrou o modelo de 10 A: https://www.neosolar.com.br/loja/controlador-carga-mppt-epever-tracer-an/. Nos anúncios encontrados, o Victron 75/10 (R$ 434,70) saiu mais barato que o EPEver 1210AN."
+   },
+   {
+    "topic": "BOM - Controlador de carga",
+    "item": "EPEver Tracer 1210AN - referência internacional",
+    "claim": "Na Europa, um marketplace alemão (eBay.de/solarvshop) lista o Tracer 1210AN a € 50,38 com IVA, e outro anúncio europeu traz € 74,79.",
+    "sources": [
+     "https://www.ebay.de/p/2163542336",
+     "https://solarkontor.de/en/products/epever-solar-laderegler-tracer-1210-an-10a-mppt-fur-12v-24v"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Apenas referência, e a data da oferta é antiga (o anúncio indicava entrega em setembro)."
+   },
+   {
+    "topic": "BOM - Armazenamento",
+    "item": "Bateria LiFePO4 12,8 V 6 Ah com BMS",
+    "claim": "No Mercado Livre, a 'Bateria LiFePO4 de Lítio Solar 6Ah Neata LFP126 12,8V BMS' custa R$ 226,00 a R$ 239,00 em promoção, com preço cheio de cerca de R$ 387,03 a R$ 399,00. Faixa para a BOM: R$ 226 a R$ 399.",
+    "sources": [
+     "https://lista.mercadolivre.com.br/bateria-litio-12v-lifepo4",
+     "https://lista.mercadolivre.com.br/bateria-lifepo4",
+     "https://lista.mercadolivre.com.br/baterias-lifepo4"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Os anúncios não mostram data, e o preço promocional é volátil. 'LFP126' é também o código de uma bateria da marca XCell na Europa, e a busca não confirmou um modelo Neata de 6 Ah no catálogo do fabricante. Antes de comprar, peça ao vendedor a ficha do BMS (corrente máxima de carga e descarga, proteções)."
+   },
+   {
+    "topic": "BOM - Armazenamento",
+    "item": "Bateria LiFePO4 12,8 V 6 Ah - referência internacional",
+    "claim": "Na Europa, a XCell LFP126 (12,8 V, 6 Ah, 151 x 65 x 94 mm, terminal faston de 6,3 mm) custa € 59,38 com IVA na Bürklin.",
+    "sources": [
+     "https://www.buerklin.com/en/p/xcell/lead-acid-batteries-lithium-ion-batteries/lfp126/26A7557",
+     "https://soselectronic.com/en-de/products/xcell/xcell-12-8-6-lfp126-361449"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Apenas referência de preço internacional."
+   },
+   {
+    "topic": "BOM - Armazenamento",
+    "item": "Bateria LiFePO4 12,8 V 12 Ah com BMS",
+    "claim": "No Mercado Livre, uma Goldenmate 12 V 12 Ah aparece por R$ 658,83 o kit com 2 unidades (cerca de R$ 329 cada), e uma Nermak 12 V 12 Ah por R$ 337,92. Como referência intermediária, uma LiFePO4 12,8 V 9 Ah com BMS aparece por R$ 309,43 (preço cheio R$ 513,13). Na Amazon.com.br, a Kingbo PB-1212 (12,8 V, 12 Ah, BMS, 2000 ciclos) estava sem oferta ativa no momento da captura. Faixa para a BOM: cerca de R$ 330 a R$ 340, mas a disponibilidade é incerta.",
+    "sources": [
+     "https://lista.mercadolivre.com.br/bateria-lifepo4-12v",
+     "https://lista.mercadolivre.com.br/bateria-litio-12v-lifepo4",
+     "https://www.amazon.com.br/Bateria-LiFePO4-12-8V-12Ah-PB-1212/dp/B0FQNK5WT7"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Os anúncios Goldenmate e Nermak parecem ser de venda internacional, com possível imposto de importação, e não ficou claro se o preço é por unidade ou por kit. Os anúncios não mostram data."
+   },
+   {
+    "topic": "BOM - Controle",
+    "item": "ESP32 DevKit V1 / DevKitC (ESP-WROOM-32)",
+    "claim": "Usinainfo: ESP32 DevKit V1 30 pinos USB-C com CP2102 a R$ 65,33 no Pix/boleto ou R$ 68,77 no cartão ('últimas unidades'); a versão Micro USB sai a R$ 62,49 no Pix ou R$ 65,78 no cartão. Curto Circuito: Placa ESP32 DevKitC ESP-WROOM-32D a R$ 52,00. Faixa: R$ 52 a R$ 69.",
+    "sources": [
+     "https://www.usinainfo.com.br/esp32/esp32-wifi-e-bluetooth-com-usb-c-30-pinos-e-cp2102-9114.html",
+     "https://www.usinainfo.com.br/esp32-611",
+     "https://curtocircuito.com.br/placa-esp32-devkitc-esp-wroom-32d.html"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "As páginas das lojas não mostram data. A busca não retornou preço de Eletrogate nem de MakerHero para ESP32."
+   },
+   {
+    "topic": "BOM - Sensoriamento",
+    "item": "Módulo INA226 (I2C)",
+    "claim": "No Mercado Livre, módulos INA226 I2C custam tipicamente R$ 28,50 a R$ 35,90 cada, e um kit com 2 unidades sai a R$ 57,90. Há um anúncio fora da curva a R$ 118,49. Para 3 sensores, o custo fica entre cerca de R$ 85,50 e R$ 107,70.",
+    "sources": [
+     "https://produto.mercadolivre.com.br/MLB-4282785438-ina226-modulo-sensor-de-corrente-dc-alta-preciso-i2c-_JM",
+     "https://produto.mercadolivre.com.br/MLB-3295158969-modulo-sensor-de-corrente-de-alta-preciso-ina226-_JM",
+     "https://lista.mercadolivre.com.br/sensor-corrente-dc"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Os anúncios não mostram data. A busca não retornou o INA226 em Eletrogate, Baú, Curto Circuito ou Usinainfo. É preciso confirmar o valor do shunt soldado no módulo (ver pendências)."
+   },
+   {
+    "topic": "BOM - Sensoriamento",
+    "item": "Resistor shunt 10 mΩ (0,010 Ω)",
+    "claim": "No Mercado Livre, um Isabellenhütte PBH R010 de 3 W e 1,0% (PTH) custa cerca de R$ 149,70. Um Vishay 0,010 Ω de 5 W e 5% custa cerca de R$ 14,00, e um lote de 2 unidades de 0R01 sai a R$ 31,35 (potência não confirmada). Também há SMD 10 mΩ 1% (RL3720WT-R010-F, 1508), mas na faixa de cerca de 2 W. A DigiKey lista o Stackpole MR3FT10L0 (10 mΩ, ±1%, 3 W, axial, metal foil), mas sem preço em R$ nos resultados.",
+    "sources": [
+     "https://lista.mercadolivre.com.br/resistor-shunt-0,01-ohms",
+     "https://lista.mercadolivre.com.br/resistor-r010",
+     "https://lista.mercadolivre.com.br/resistor-0.01-ohm",
+     "https://produto.mercadolivre.com.br/MLB-3522816741-5x-resistor-0r010-10mohms-1508-1-smd-rl3720wt-r010-f-_JM",
+     "https://www.digikey.ch/en/products/detail/stackpole-electronics-inc/MR3FT10L0/1650254"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Na prática, o 1% em 3 W com marca rastreável só apareceu no anúncio Isabellenhütte (R$ 149,70), que fica caro para 3 unidades. A alternativa de 5% (cerca de R$ 14) exige calibração por software. Não foi obtido preço em R$ de Mouser/DigiKey Brasil para MR3FT10L0 ou Arcol MSR-3 R01 F. Shunt de 4 terminais não foi pesquisado."
+   },
+   {
+    "topic": "BOM - Sensoriamento",
+    "item": "DS18B20 encapsulado à prova d'água",
+    "claim": "Usinainfo: sonda inox com cabo de 90 cm a R$ 8,17–9,40 (Pix/boleto). Eletrogate: versão à prova d'água a R$ 10,90, ou R$ 10,36 no Pix. Curto Circuito: R$ 13,80. Baú da Eletrônica (DFRobot, cabo de 1 m): R$ 18,90, ou R$ 17,01 no Pix. Faixa: R$ 8 a R$ 19.",
+    "sources": [
+     "https://www.usinainfo.com.br/sensor-de-temperatura/sensor-de-temperatura-ds-18b20-a-prova-d-agua-2645.html",
+     "https://curtocircuito.com.br/sensor-de-temperatura-ds18b20.html",
+     "https://www.baudaeletronica.com.br/produto/sensor-de-temperatura-a-prova-de-agua-ds18b20-1m.html",
+     "https://www.eletrogate.com/temperatura-umidade"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "As páginas não mostram data. A Usinainfo informa que o cabo é de PVC, com temperatura máxima recomendada de 100 °C. A URL exata da versão à prova d'água na Eletrogate não veio no resultado; foi citada a página da categoria."
+   },
+   {
+    "topic": "BOM - Controle",
+    "item": "Módulo RTC DS3231 (com EEPROM AT24C32)",
+    "claim": "Usinainfo: R$ 29,11 no Pix/boleto ou R$ 30,64 no cartão (disponível); outra listagem mostra R$ 15,39 ('últimas unidades'). Baú da Eletrônica: R$ 35,46, ou R$ 31,91 no Pix (em estoque). Curto Circuito: R$ 21,00 promocional / R$ 25,90 (esgotado). MakerHero: R$ 18,90 (fora de estoque). Faixa: R$ 15 a R$ 36.",
+    "sources": [
+     "https://www.usinainfo.com.br/rtc-arduino/modulo-relogio-tempo-real-rtc-com-sensor-de-temperatura-ds3231-4674.html",
+     "https://www.usinainfo.com.br/rtc-arduino-539",
+     "https://www.baudaeletronica.com.br/produto/real-time-clock-ds3231.html",
+     "https://curtocircuito.com.br/modulo-real-time-clock-rtc-ds3231.html",
+     "https://www.makerhero.com/produto/real-time-clock-rtc-ds3231/"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "As páginas não mostram data. A busca não exibiu o preço da Eletrogate (https://www.eletrogate.com/real-time-clock-rtc-ds3231)."
+   },
+   {
+    "topic": "BOM - Acionamento",
+    "item": "MOSFET IRLZ44N (nível lógico, TO-220)",
+    "claim": "No Mercado Livre, a unidade avulsa custa R$ 12,95 a R$ 17,99. Kit de 5 peças: R$ 33,85 (cerca de R$ 6,77 cada). Kit de 10 peças: R$ 53,90 a R$ 59,90 (cerca de R$ 5,39 a R$ 5,99 cada). Lote de 100: R$ 499,00 (R$ 4,99 cada). Para 3 cargas mais reserva, o kit de 5 (R$ 33,85) é a opção recomendada.",
+    "sources": [
+     "https://lista.mercadolivre.com.br/transistor-irlz44n",
+     "https://lista.mercadolivre.com.br/mosfet-irlz44n",
+     "https://produto.mercadolivre.com.br/MLB-1967421680-05-unids-transistor-irlz44n-irlz44n-original-_JM",
+     "https://produto.mercadolivre.com.br/MLB-3315470423-10pc-transistor-irlz44-npbf-mosfet-n-ch-55v-47a-irlz44n-_JM",
+     "https://produto.mercadolivre.com.br/MLB-1864598519-100pc-transistor-irlz44n-mosfet-n-ch-55v-47a-irlz44-_JM",
+     "https://www.mercadolivre.com.br/transistor-fet-mosfet-irlz44-1-peca-irlz44n-irlz-44/p/MLB36424661"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Os anúncios não mostram data. O IRLZ44N não foi encontrado em Eletrogate, Baú ou MakerHero. Há risco de peça falsificada em marketplace, então confirme o VGS(th) e o RDS(on) com 4,5 V ou menos de gate no datasheet Infineon e teste na bancada. Os anúncios divergem sobre ID (41 A ou 47 A) e PD (83 W ou 50 W)."
+   },
+   {
+    "topic": "BOM - Acionamento",
+    "item": "IRFZ44N (NÃO substitui o IRLZ44N)",
+    "claim": "O IRFZ44N, que não é de nível lógico, custa R$ 3,90 (R$ 3,70 no Pix) na Eletrogate e R$ 5,60 (R$ 5,04 no Pix) no Baú da Eletrônica; na MakerHero está a R$ 5,60, fora de estoque. A página da MakerHero indica limiar de gate de 2–4 V, o que o torna inadequado para acionamento direto por 3,3 V do ESP32.",
+    "sources": [
+     "https://www.eletrogate.com/transistor-mosfet-irfz44n",
+     "https://www.baudaeletronica.com.br/produto/transistor-irfz44n-mosfet-de-canal-n.html",
+     "https://www.makerhero.com/produto/transistor-irfz44n/"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Incluído para evitar troca indevida na compra."
+   },
+   {
+    "topic": "BOM - Isolação",
+    "item": "Optoacoplador PC817",
+    "claim": "PC817 DIP: Eletrogate R$ 0,60 (R$ 0,57 no Pix, possivelmente indisponível) e MakerHero R$ 0,90 (R$ 0,85 no Pix, em estoque). PC817 SMD: Baú R$ 1,12 (R$ 1,01 no Pix) e Curto Circuito R$ 1,90. Módulo de 2 canais com PC817: Usinainfo R$ 10,40 no Pix ou R$ 10,95 no cartão.",
+    "sources": [
+     "https://www.eletrogate.com/optoacoplador-pc817",
+     "https://www.makerhero.com/produto/pc817-ci-optoacoplador/",
+     "https://www.baudaeletronica.com.br/produto/optoacoplador-pc817-smd.html",
+     "https://curtocircuito.com.br/ci-optoacoplador-pc817-smt-gullwing-4-smd.html",
+     "https://www.usinainfo.com.br/optoacoplador/isolador-optico-pc817-2-canais-36-24v-8305.html"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "As páginas não mostram data."
+   },
+   {
+    "topic": "BOM - Proteção",
+    "item": "Diodo Schottky 1N5819 / 1N5822",
+    "claim": "1N5819: Baú da Eletrônica R$ 0,23 (R$ 0,16 no Pix, estoque incerto); Eletrogate kit com 10 unidades a R$ 2,20 (R$ 2,09 no Pix, disponível); MakerHero R$ 0,47 (fora de estoque). 1N5822 (3 A, 40 V): MakerHero R$ 0,70 no Pix ou R$ 1,49 no preço de tabela.",
+    "sources": [
+     "https://www.baudaeletronica.com.br/produto/diodo-1n5819.html",
+     "https://www.eletrogate.com/diodo-1n5819-10-unidades",
+     "https://www.makerhero.com/produto/diodo-retificador-1n5819/",
+     "https://www.makerhero.com/produto/diodo-retificador-1n5822/"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Não foram encontrados preços de SS34 nem SB560. O Baú lista o SB360 (https://www.baudaeletronica.com.br/produto/diodo-sb360.html), mas a busca não retornou o preço."
+   },
+   {
+    "topic": "BOM - Alimentação",
+    "item": "Módulo buck LM2596 / MP1584",
+    "claim": "LM2596 sem display: Eletrogate R$ 8,90 (R$ 8,46 no Pix), MakerHero R$ 9,90 (R$ 9,40 no Pix), Usinainfo R$ 9,80 no Pix (página com cadastro antigo). LM2596 com display: Baú R$ 26,90 (R$ 24,21 no Pix), Usinainfo R$ 19,50 no Pix. MP1584EN: Curto Circuito R$ 7,40 promocional / R$ 10,90 cheio (página antiga). O preço do MP1584 da MakerHero não foi retornado.",
+    "sources": [
+     "https://www.eletrogate.com/modulo-regulador-de-tensao-step-down-lm2596",
+     "https://www.makerhero.com/produto/regulador-de-tensao-lm2596-conversor-dc-dc-step-down/",
+     "https://www.usinainfo.com.br/regulador-de-tensao/regulador-de-tensao-ajustavel-lm2596-dc-step-down-saida-15v-a-35vdc-12a-2552.html",
+     "https://www.baudaeletronica.com.br/produto/modulo-regulador-de-tensao-lm2596-com-display.html",
+     "https://www.makerhero.com/produto/mini-conversor-de-tensao-dc-dc-step-down/",
+     "https://curtocircuito.com.br/conversor-dc-dc-step-down-lm2596.html"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "As páginas não mostram data. Não foi pesquisado um regulador 5 V de qualidade (por exemplo, Pololu ou TI)."
+   },
+   {
+    "topic": "BOM - Proteção",
+    "item": "Diodo TVS SMBJ18A (SMB/DO-214AA)",
+    "claim": "No Mercado Livre: lote de 5 por cerca de R$ 11,80; lote de 10 por cerca de R$ 14,90; lote de 100 por R$ 112,00; lote de 200 por R$ 192,00. Distribuidores, em dólar e sem impostos BR: DigiKey (Littelfuse) US$ 0,50 a unidade; Mouser (Vishay SMBJ18A-E3/52) US$ 0,43 a unidade.",
+    "sources": [
+     "https://lista.mercadolivre.com.br/diodo-tvs-18v",
+     "https://www.mercadolivre.com.br/diodo-transzorb-smbj18asmddirecionalembalagem-05-pecas/up/MLBU753879774",
+     "https://produto.mercadolivre.com.br/MLB-3570433303-diodo-tvs-tranzorb-unidir-18v-600w-smbj18a-200-unidades-_JM",
+     "https://www.digikey.com.br/pt/products/detail/littelfuse-inc/SMBJ18A/285984",
+     "https://www.mouser.com/en/ProductDetail/Vishay-Semiconductors/SMBJ18A-E3-52?qs=3qLEwsAJF5THC%2Fs6Ge44Fg%3D%3D"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Um anúncio no ML de 5 unidades a R$ 139,75 traz especificações inconsistentes ('700 W', '100 A') e deve ser evitado. Não foi obtido preço em R$ com imposto na DigiKey ou Mouser Brasil."
+   },
+   {
+    "topic": "BOM - Proteção",
+    "item": "Porta-fusível de lâmina + fusíveis ATO/ATC/mini (ESTIMATIVA)",
+    "claim": "Estimativa, não verificada nesta busca: porta-fusível de lâmina em linha a R$ 5–15 cada; caixa de fusíveis de 4–6 vias a R$ 30–60; kit de fusíveis de lâmina sortidos a R$ 15–40.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "A busca não foi feita porque o limite de pesquisas web da sessão foi atingido. A faixa vem do conhecimento prévio de preços típicos do varejo brasileiro de autopeças e eletrônica (2024–2025) e precisa ser cotada."
+   },
+   {
+    "topic": "BOM - Proteção",
+    "item": "Disjuntor CC para o lado FV (ESTIMATIVA)",
+    "claim": "Estimativa, não verificada nesta busca: disjuntor CC 2P de 6–10 A com tensão nominal CC de pelo menos 250 V, de marca genérica para fotovoltaico, a R$ 30–80.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "A busca não foi feita (limite de pesquisas atingido). É uma faixa de conhecimento prévio e precisa ser cotada em NeoSolar, Minha Casa Solar ou Mercado Livre."
+   },
+   {
+    "topic": "BOM - Cargas",
+    "item": "Fita LED 12 V ou lâmpada LED 12 V ~5 W (ESTIMATIVA)",
+    "claim": "Estimativa, não verificada nesta busca: lâmpada LED bulbo 12 V CC de 5 W a R$ 10–25; fita LED 12 V (rolo de 5 m) a R$ 25–60. Trecho de cerca de 5 W cortado do rolo ou lâmpada única.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "A busca não foi feita (limite de pesquisas atingido). Faixa de conhecimento prévio, a cotar."
+   },
+   {
+    "topic": "BOM - Cargas",
+    "item": "Ventilador 12 V com PWM (ESTIMATIVA)",
+    "claim": "Estimativa, não verificada nesta busca: cooler de PC 12 V de 4 fios (PWM), 80–120 mm, a R$ 15–60.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "A busca não foi feita (limite de pesquisas atingido). A potência real de coolers comuns precisa ser verificada no rótulo, porque os ~6 W do projeto podem exigir um modelo de alta rotação."
+   },
+   {
+    "topic": "BOM - Cargas",
+    "item": "Resistor de potência 10 Ω 50 W (corpo de alumínio) + dissipador (ESTIMATIVA)",
+    "claim": "Estimativa, não verificada nesta busca: resistor 10 Ω 50 W de corpo de alumínio a R$ 10–25; dissipador de alumínio a R$ 15–50. Pela conta P = V²/R, a 12,8 V o resistor de 10 Ω dissipa cerca de 16,4 W, o que é coerente com a carga de ~16 W.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "A busca não foi feita (limite de pesquisas atingido). O cálculo de potência é aritmético; o preço é estimativa a cotar."
+   },
+   {
+    "topic": "BOM - Cabeamento",
+    "item": "Cabos 2,5 mm² e 1,5 mm² flexíveis (por metro) (ESTIMATIVA)",
+    "claim": "Estimativa, não verificada nesta busca: cabo flexível de 2,5 mm² a R$ 2,50–5,00 o metro; de 1,5 mm² a R$ 1,50–3,50 o metro (preço fracionado; o rolo de 100 m sai mais barato por metro).",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "A busca não foi feita (limite de pesquisas atingido). Faixa de conhecimento prévio, a cotar."
+   },
+   {
+    "topic": "BOM - Cabeamento",
+    "item": "Conectores MC4 (par macho/fêmea) (ESTIMATIVA)",
+    "claim": "Estimativa, não verificada nesta busca: par de conectores MC4 a R$ 8–20.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "A busca não foi feita (limite de pesquisas atingido). Faixa de conhecimento prévio, a cotar."
+   },
+   {
+    "topic": "BOM - Cabeamento",
+    "item": "Borne/barramento CC (busbar) e terminais (ESTIMATIVA)",
+    "claim": "Estimativa, não verificada nesta busca: barramento CC de 4–6 vias a R$ 20–60; kit de terminais (ilhós, olhal ou forquilha) a R$ 20–50; conectores de alavanca tipo 221 (kit) a R$ 30–80.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "A busca não foi feita (limite de pesquisas atingido). Faixa de conhecimento prévio, a cotar."
+   },
+   {
+    "topic": "BOM - Instrumentação",
+    "item": "Multímetro com medição de corrente CC (ESTIMATIVA)",
+    "claim": "Estimativa, não verificada nesta busca: multímetro digital de entrada com faixa de 10 A CC a R$ 60–200.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "A busca não foi feita (limite de pesquisas atingido). Faixa de conhecimento prévio, a cotar."
+   },
+   {
+    "topic": "BOM - Instrumentação",
+    "item": "Alicate amperímetro CC (opcional) (ESTIMATIVA)",
+    "claim": "Estimativa, não verificada nesta busca: alicate amperímetro com medição de corrente CC por efeito Hall a R$ 200–400.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "A busca não foi feita (limite de pesquisas atingido). Faixa de conhecimento prévio, a cotar."
+   },
+   {
+    "topic": "BOM - Instrumentação",
+    "item": "Fonte de bancada (opcional) (ESTIMATIVA)",
+    "claim": "Estimativa, não verificada nesta busca: fonte de bancada regulável 0–30 V / 5–10 A a R$ 350–700.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "A busca não foi feita (limite de pesquisas atingido). Faixa de conhecimento prévio, a cotar."
+   },
+   {
+    "topic": "BOM - Mecânica",
+    "item": "Caixa / painel de montagem (ESTIMATIVA)",
+    "claim": "Estimativa, não verificada nesta busca: placa de MDF ou acrílico mais caixa plástica de passagem para a eletrônica a R$ 50–150.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "A busca não foi feita (limite de pesquisas atingido). Faixa de conhecimento prévio, a cotar."
+   },
+   {
+    "topic": "BOM - Consolidação",
+    "item": "Subtotal parcial dos itens com preço encontrado",
+    "claim": "Soma dos itens com preço encontrado: painel 50 W, controlador, bateria 6 Ah, ESP32, 3x INA226, DS18B20, DS3231, kit de 5 IRLZ44N (ou 3 avulsos), 3x PC817, 1N5819 (kit de 10), LM2596 e TVS (lote de 5). O cenário mínimo usa os menores preços encontrados (por exemplo, o Victron a R$ 434,70); o máximo usa os maiores (por exemplo, o EPEver a R$ 498 e a bateria a preço cheio). Resultado: cerca de R$ 1.130 (mínimo) a R$ 1.495 (máximo), sem frete, sem shunts externos e sem os itens estimados.",
+    "sources": [
+     "https://www.amazon.com.br/Victron-SmartSolar-MPPT-75-Controlador/dp/B075NTT8GH",
+     "https://lista.mercadolivre.com.br/painel-solar-50w",
+     "https://lista.mercadolivre.com.br/bateria-litio-12v-lifepo4"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Valor derivado por soma aritmética dos achados acima. Mínimo: 250 + 434,70 + 226 + 52 + 85,50 + 8,17 + 15,39 + 33,85 + 1,80 + 2,20 + 8,90 + 11,80. Máximo: 279,99 + 498 + 399 + 68,77 + 107,70 + 18,90 + 35,46 + 53,97 + 5,70 + 2,20 + 9,90 + 14,90."
+   }
+  ],
+  "open_issues": [
+   "O limite de pesquisas web da sessão (200 buscas, compartilhado entre agentes) foi atingido durante a coleta. Ficaram SEM preço verificado: porta-fusível e fusíveis de lâmina, disjuntor CC, fita ou lâmpada LED 12 V, ventilador 12 V PWM, resistor 10 Ω 50 W e dissipador, cabos de 2,5 e 1,5 mm², conectores MC4, busbar e terminais, multímetro, alicate amperímetro, fonte de bancada e caixa. Os valores dados para eles são estimativas não verificadas e precisam ser cotados. O usuário pode pedir uma nova rodada de busca ou aumentar CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION.",
+   "O WebFetch falhou (lista.mercadolivre.com.br fora dos domínios de rede permitidos), então nenhum preço pôde ser conferido diretamente na página. Todos os valores vêm de trechos indexados pelo buscador, sem data visível. Considere 'consultado em 05/11/2026 via buscador' e reconfirme antes da compra.",
+   "Victron SmartSolar 75/10: confirmar se a oferta da Amazon.com.br a R$ 434,70 é de vendedor nacional (com nota fiscal e garantia BR) ou internacional (sujeita a importação), e confirmar o part number SCC075010060R. Não foi encontrado preço em NeoSolar, Minha Casa Solar ou revendedor Victron oficial no Brasil.",
+   "EPEver Tracer 1210AN: confirmar no datasheet EPEver a versão (AN ou AN G3), a tensão FV máxima de 100 V (só aparece no título do anúncio) e a existência de perfil LiFePO4 configurável.",
+   "Painel 50 W: nenhum anúncio confirmou 36 células, Voc, Vmp e Isc. Validar na etiqueta ou no datasheet (Resun, Sinosola, Yingli). O painel flexível Enernit ES 50W (Vmp 12,03 V, segundo a Minha Casa Solar) é inadequado para carregar LiFePO4 12,8 V.",
+   "Bateria LiFePO4 6 Ah 'Neata LFP126': o código LFP126 corresponde a um produto XCell na Europa, e a existência do modelo Neata de 6 Ah não foi confirmada no fabricante. Pedir ficha do BMS (corrente máxima de carga e descarga, proteção de baixa temperatura). Os anúncios de 12 Ah (Goldenmate, Nermak) parecem internacionais, e não ficou claro se o preço é por unidade.",
+   "Módulo INA226: confirmar o valor do shunt soldado no módulo comprado (muitos módulos genéricos vêm com resistor 'R100' = 0,1 Ω). Pelo datasheet TI, a faixa de tensão de shunt do INA226 é ±81,92 mV, o que limitaria a corrente a cerca de 0,8 A com 0,1 Ω. Por isso pode ser preciso substituir pelo shunt de 10 mΩ. Validar no datasheet TI e no módulo físico.",
+   "Shunt 10 mΩ 1% 2–3 W: não foi obtido preço em R$ com imposto na Mouser ou DigiKey Brasil (por exemplo, Stackpole MR3FT10L0, Arcol MSR-3 R01 F, Riedon/Bourns MSR3-0R01F1). O único 1% de 3 W encontrado no ML (Isabellenhütte PBH R010, cerca de R$ 149,70) é caro. Shunt de 4 terminais não foi pesquisado.",
+   "IRLZ44N: só foi encontrado em marketplace (Mercado Livre), com risco de falsificação. Validar VGS(th) e RDS(on) com VGS de 4,5 V ou menos no datasheet Infineon, e testar com 3,3 V do ESP32 (ou usar driver de gate).",
+   "Diodos SS34 e SB560 e um regulador 5 V 'de qualidade' (Pololu, TI ou similar) não tiveram preço encontrado.",
+   "Ventilador 'cerca de 6 W com PWM': coolers 12 V comuns de 80–120 mm costumam consumir bem menos. Confirmar o modelo e a potência real no rótulo ou no datasheet antes de fechar a BOM.",
+   "Os preços em Mouser e DigiKey foram vistos só em US$ (SMBJ18A: US$ 0,43–0,66 a unidade). A conversão para R$ com impostos e frete de importação ficou pendente."
+  ]
+ },
+ {
+  "key": "bateria_painel_recurso",
+  "findings": [
+   {
+    "topic": "1. Bateria LiFePO4 12,8 V 6 Ah: mercado brasileiro",
+    "item": "Unipower (Unicoba) e Ultracell, fichas de 6 Ah",
+    "claim": "Não achei ficha técnica pública da Unipower nem da Ultracell para LiFePO4 12,8 V 6 Ah. A busca trouxe só o manual técnico genérico de baterias LiFePO4 da Unipower (Unicoba da Amazônia), que tem um capítulo sobre o BMS mas não mostrou valores no trecho retornado. O contato do fabricante é sac@unipower.com.br, telefone +55 11 5078 5555. Da Ultracell só apareceram baterias de chumbo-ácido (UL12-12 e similares).",
+    "sources": [
+     "https://download.aldo.com.br/pdfprodutos/Produto339500IdArquivo28076.pdf",
+     "https://www.triopak.fi/files/product/Ultracell/UL12-12.pdf"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "A UPower espanhola (série UE-12Li) é outra marca, não a Unipower brasileira. Os limites do BMS do modelo que for comprado precisam ser pedidos ao fabricante ou vendedor."
+   },
+   {
+    "topic": "1. Bateria LiFePO4 12,8 V 6 Ah",
+    "item": "Ritar R-LFP12.8V6Ah: ciclos, dimensões e células",
+    "claim": "Usa células cilíndricas LiFePO4 32700 de 6 Ah e declara mais de 2000 ciclos a 80% de DOD. Tem 12,8 V, 6 Ah (76,8 Wh), mede 151 × 65 × 93,5 mm, pesa 0,82 kg e usa terminal F2. Possui BMS integrado com proteção contra sobretensão, subtensão, sobretemperatura e curto-circuito, além de certificação UN38.3 e CE.",
+    "sources": [
+     "https://mantech.co.za/Datasheets/Products/r-lfp12.8v6ah-230619a.pdf"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "É a ficha do fabricante (Ritar) hospedada por distribuidor. Li só o texto extraído pela busca, porque o domínio mantech.co.za está bloqueado nesta sessão."
+   },
+   {
+    "topic": "1. Bateria LiFePO4 12,8 V 6 Ah",
+    "item": "Ritar R-LFP12.8V6Ah: correntes e tensões",
+    "claim": "A tabela saiu embaralhada na extração. A leitura mais provável é: corrente máxima de carga de 6 A (1C), corrente de carga recomendada de 3 A (0,5C), tensão de carga de 14,6 V, descarga contínua máxima de 6 A (1C), pico de 12 A por 10 s e tensão de fim de descarga de 11,2 V.",
+    "sources": [
+     "https://mantech.co.za/Datasheets/Products/r-lfp12.8v6ah-230619a.pdf"
+    ],
+    "confidence": "nao_verificado",
+    "notes": "Os rótulos das colunas não vieram, então não é possível confirmar que o valor de 12 A @ 10 s é de pico de descarga. Também falta confirmar o 11,2 V."
+   },
+   {
+    "topic": "1. Bateria LiFePO4 12,8 V (família Ritar)",
+    "item": "Faixas de temperatura e corte do PCM/BMS da Ritar",
+    "claim": "As fichas Ritar de 12,8 V dão carga entre 0 e +50 °C e descarga entre −20 e +55 °C. As proteções listadas são sobrecarga, sobredescarga, sobretemperatura e curto-circuito. Na especificação do PCM do pack Ritar 12,8 V 100 Ah, a sobredescarga é detectada em 9,4 V (pack) e liberada em 10 V.",
+    "sources": [
+     "https://www.akumulator.si/img/upload/attachments/21072021144645_Datasheet-12.8V-25.6V.pdf",
+     "https://solarhouse.bg/wp-content/uploads/2025/06/Datasheet-12.8V-50Ah.pdf",
+     "https://www.akumulator.si/img/upload/attachments/14052021094011_Datasheet_-12.8V100Ah-Li-ion-battery--Bluetooth.pdf",
+     "https://ohrana.ua/storage/instructions/cdd75a5b-0774-4a02-98f4-c3dab8292d2a/%D0%9F%D0%BE%D1%81%D1%96%D0%B1%D0%BD%D0%B8%D0%BA_%D0%BA%D0%BE%D1%80%D0%B8%D1%81%D1%82%D1%83%D0%B2%D0%B0%D1%87%D0%B0_Ritar_12.8V_User_manual_EN.pdf"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Os 9,4 V e 10 V são do pack de 100 Ah, e não sei qual dos dois últimos PDFs traz esse dado. Não dá para aplicar direto ao pack de 6 Ah. Uma faixa de carga de 0 a 50 °C não prova que existe corte de carga em baixa temperatura no BMS."
+   },
+   {
+    "topic": "1. Bateria LiFePO4 12,8 V 6 Ah",
+    "item": "Bioenno BLF-1206A (12 V 6 Ah, EUA)",
+    "claim": "Descarga contínua máxima de 12 A (2C) e pico de 24 A por 2 s. Carga em 14,6 V, com o carregador do fabricante (BPC-1502DC) fornecendo 2 A. Faixa de tensão em circuito aberto de 10 a 14,6 V. Mede 108 × 64 × 69 mm e pesa cerca de 0,7 kg.",
+    "sources": [
+     "https://cdn.shopify.com/s/files/1/0219/0154/files/BLF-1206A_User_Manual_rev_04_23_2019.pdf",
+     "https://www.bioennopower.com/products/12v-6ah-lifepo4-battery-pvc",
+     "https://powerwerx.com/bioenno-blf-1206a-12v-6ah-lithium-iron-pvc"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "Manual do fabricante. Os limiares de corte do BMS (subtensão, sobrecorrente, baixa temperatura) não apareceram nos trechos. Não é vendida no Brasil e serve só como referência."
+   },
+   {
+    "topic": "1. Bateria LiFePO4 12,8 V 5–6 Ah",
+    "item": "ExpertPower EP125 (12,8 V 5 Ah): BMS por célula",
+    "claim": "Tensão nominal de 12,8 V, carga em 14,4 V, descarga contínua de 5 A (1C) e 7,5 A por 5 s, carga contínua de 2,5 A (0,5C). O BMS desliga com célula acima de 3,65 V (sobretensão) ou abaixo de 2,2 V (subtensão), o que dá cerca de 14,6 V e 8,8 V no pack. O corte de sobrecorrente é acima de 15 A com atraso de cerca de 1 s. O fabricante declara de 2500 a 7000 ciclos.",
+    "sources": [
+     "https://expertpower.us/es/products/ep125-5ah",
+     "https://cdn.shopify.com/s/files/1/2364/9089/files/EP125-4S.pdf",
+     "https://www.expertpower.us/zh/products/ep125-5ah"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "Os limiares de 3,65 V, 2,2 V e 15 A vieram de um PDF com extração imperfeita e precisam ser conferidos. Nenhum resultado diz se há bloqueio de carga em baixa temperatura."
+   },
+   {
+    "topic": "1. Bateria LiFePO4 12,8 V 6 Ah",
+    "item": "KH LFP-SC-1206 (12,8 V 6 Ah)",
+    "claim": "Capacidade nominal de 6 Ah a 0,5C até 9,6 V e resistência interna de no máximo 80 mΩ. Declara mais de 2000 ciclos (até 7000 em condições ideais) e aceita até 4 unidades em série ou 10 em paralelo. A listagem KH/Litech correspondente dá carga máxima de 3 A, descarga máxima de 6 A e corte de carga em 15,2 V.",
+    "sources": [
+     "https://www.lithiumbatterytech.com/wp-content/uploads/2021/05/KH-LFP-SC-1206-DATASHEET.pdf"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "O corte de 15,2 V é alto e diverge do padrão de 14,6 V. Pode ser um limite de proteção, não a tensão de carga. Precisa ser validado."
+   },
+   {
+    "topic": "1. Bateria LiFePO4 12,8 V 6 Ah",
+    "item": "Faixa de valores entre fabricantes (resumo)",
+    "claim": "Nas fichas de 12,8 V 6 Ah encontradas, a descarga contínua do BMS fica entre 3 e 12 A (0,5C a 2C), sendo 6 A (1C) o valor mais comum. A carga máxima vai de 2,5 a 6 A, com recomendação de 0,2C a 0,5C. A tensão de carga fica entre 14,4 e 14,6 V. O corte de descarga do pack fica entre cerca de 8,8 V (2,2 V/célula) e 11,2 V. A vida útil declarada é de 2000 a 3000 ciclos a 80% de DOD.",
+    "sources": [
+     "https://mantech.co.za/Datasheets/Products/r-lfp12.8v6ah-230619a.pdf",
+     "https://cdn.shopify.com/s/files/1/0219/0154/files/BLF-1206A_User_Manual_rev_04_23_2019.pdf",
+     "https://expertpower.us/es/products/ep125-5ah",
+     "https://cdn.shopify.com/s/files/1/0331/8464/5253/files/Datasheet_EX-L12V6_EN-UK.pdf",
+     "https://www.lithiumbatterytech.com/wp-content/uploads/2021/05/KH-LFP-SC-1206-DATASHEET.pdf",
+     "https://www.enfsolar.com/pv/storage-system-datasheet/7198"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Isto é uma síntese dos modelos citados. Para o projeto, conviria limitar o firmware a cerca de 0,5C (3 A) na carga e no máximo 1C (6 A) na descarga contínua até ter a ficha do pack comprado. A carga total do protótipo, LED 5 W + ventilador 6 W + resistiva 16 W = 27 W, dá cerca de 2,1 A em 12,8 V, abaixo de 6 A."
+   },
+   {
+    "topic": "1. Bateria LiFePO4 12,8 V 6 Ah",
+    "item": "Proteção de carga em baixa temperatura",
+    "claim": "As fichas especificam carga apenas entre 0 e +45 °C (UPower UE-12Li100) ou 0 e +50 °C (Ritar), e descarga entre −20 e +55/60 °C. Algumas descrevem sensor de temperatura no BMS: o pack LiTech 12,8 V 6 Ah cita sensor para proteção de alta e baixa temperatura, e o V-LFP-12-6.0 corta em 65 °C. Nenhuma ficha de 6 Ah encontrada deixa claro um limiar numérico de bloqueio de carga abaixo de 0 °C.",
+    "sources": [
+     "https://fvcomponentes.com/wp-content/uploads/2026/01/Ficha-tecnica-Bateria-U-Power-UE-12Li100-3.pdf",
+     "https://www.akumulator.si/img/upload/attachments/21072021144645_Datasheet-12.8V-25.6V.pdf",
+     "https://litechpower.com/product/lifepo4-12v-battery-6ah",
+     "https://batteriesdirect.com.au/files/products/V-LFP-12-61722492049_1.pdf"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Em Cornélio Procópio a temperatura raramente fica abaixo de 0 °C, mas o firmware pode inibir a carga com a leitura do DS18B20 abaixo de 0 °C (ou de 5 °C, por margem) e acima de 45 °C, sem depender do BMS. Isto é uma recomendação de projeto, não um dado de ficha."
+   },
+   {
+    "topic": "1. Bateria LiFePO4 12,8 V 12 Ah",
+    "item": "Ritar R-LFP12.8V12Ah",
+    "claim": "Um varejista ucraniano dá corrente máxima de carga de 6 A (0,5C). A ficha traz 30 A por 10 s (provável pico de descarga), BMS integrado com proteção de sobretemperatura e curto, e mais de 2000 ciclos a 80% de DOD (até 80% da capacidade inicial). A descarga contínua não foi confirmada: a tabela pode indicar 12 A, mas sem rótulo legível.",
+    "sources": [
+     "https://fixer.com.ua/files/ritar-r-lfp128v12ah_30215.pdf",
+     "https://vencon.ua/ua/products/ritar-lifepo4-r-lfp-12-8v-12ah",
+     "https://pipl.ua/uploads/product_documents/e7/f4/fij9bagmt_adcbf8fa.pdf"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "A descarga contínua de 12 A é uma inferência pela ordem das colunas."
+   },
+   {
+    "topic": "1. Bateria LiFePO4 12,8 V 12 Ah",
+    "item": "Goowei CNLFP12-12.8 e Jaycar/Powertech SB2211 (12 Ah)",
+    "claim": "A Goowei CNLFP12-12.8 (12,8 V 12 Ah) opera entre 9,2 e 14,6 V, com carga máxima de 6 A e descarga máxima de 10 A. A Powertech SB2211 (12,8 V 12 Ah) declara mais de 1500 ciclos com mais de 80% de retenção de capacidade, carga CC/CV e corte de descarga em torno de 10 V.",
+    "sources": [
+     "https://b2b.100mega.com/en/298631-goowei-energy-cnlfp12-12-8",
+     "https://jaycar-prod.australia-southeast1.gcp.storefrontcloud.io/12-8v-12ah-lithium-deep-cycle-battery/p/SB2211",
+     "https://housetradesupplies.com.au/powertech-deep-cycle-battery-12-8v-12ah-lithium-sb2211.html"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Nenhuma é de fornecedor brasileiro. Servem como ordem de grandeza para o caso de 12 Ah."
+   },
+   {
+    "topic": "1. Bateria LiFePO4 (outros 6 Ah)",
+    "item": "UPG LFP1260 (12,8 V 6 Ah)",
+    "claim": "Um varejista lista 6 Ah (de C/5 a C/100) e 2000 ciclos a 100% de DoD. Outro confirma BMS com circuito de balanceamento na carga. Os limiares de corte não são informados.",
+    "sources": [
+     "https://www.sunwize.com/product/upg-lfp1260-lifepo4-battery/",
+     "https://www.batteryspecialist.ca/lfp1260-12-8v-6ah-lifepo4-lithium-battery-with-bms-protection-terminal-f2"
+    ],
+    "confidence": "fonte_secundaria"
+   },
+   {
+    "topic": "2. Curva OCV × SOC LiFePO4 4S",
+    "item": "Tabela de referência para 12,8 V em repouso (Footprint Hero)",
+    "claim": "Tensão de pack em repouso por SOC: 14,6 V = 100% (em carga); 13,6 V = 100% (repouso); 13,4 V = 99%; 13,3 V = 90%; 13,2 V = 70%; 13,1 V = 40%; 13,0 V = 30%; 12,9 V = 20%; 12,8 V = 17%; 12,5 V = 14%; 12,0 V = 9%; 10,0 V = 0%.",
+    "sources": [
+     "https://footprinthero.com/lifepo4-battery-voltage-charts"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Blog sem metodologia declarada. Interpolando: 80% ≈ 13,25 V, 60% ≈ 13,17 V, 50% ≈ 13,13 V e 10% ≈ 12,1 V (cálculo meu, não da fonte)."
+   },
+   {
+    "topic": "2. Curva OCV × SOC LiFePO4 4S",
+    "item": "Tabela alternativa (Vatrer) e ponto de 0% (LiTime)",
+    "claim": "Pela Vatrer: 100% = 13,4 a 13,6 V; 90% = 13,4 V; 80% = 13,28 V; 70% = 13,2 V; 50% = 13,04 V (outra versão dá 13,0 a 13,1 V); 25% = 12,8 a 12,9 V; corte em 10 V. A LiTime diz que o pack chega a cerca de 10 V quando totalmente descarregado. Outras tabelas põem o 0% em 9,5 V, mostrando que o trecho de baixo SOC varia muito entre fontes.",
+    "sources": [
+     "https://www.vatrerpower.com/blogs/news/lifepo4-voltage-chart-a-comprehensive-guide",
+     "https://www.vatrerpower.com/en-ca/blogs/news/lifepo4-voltage-chart-a-comprehensive-guide",
+     "https://au.litime.com/blogs/knowledge/lithium-battery-voltage-chart",
+     "https://www.wevolver.com/article/lifepo4-voltage-chart-soc-voltages-for-32v12v24v48v-systems"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Todas são fontes de fabricante ou varejo, sem dados de ensaio. As fontes recomendam medir a OCV após pelo menos 30 min sem carga."
+   },
+   {
+    "topic": "2. Curva OCV × SOC LiFePO4 4S",
+    "item": "Planicidade entre 20% e 80% e o que isso implica para estimar o SOC",
+    "claim": "Entre 20% e 80% de SOC a OCV do pack varia só cerca de 0,35 a 0,45 V (de 12,85–12,9 V a 13,25–13,3 V nas tabelas acima), ou seja, cerca de 0,1 V por célula e 5 a 7 mV por ponto percentual no pack. A literatura diz que, no platô, 1 mV de erro na OCV pode gerar quase 5% de erro no SOC. A curva também tem histerese: a OCV na carga é diferente da OCV na descarga para o mesmo SOC. Por isso, estimar o SOC só pela tensão é pouco confiável na faixa intermediária.",
+    "sources": [
+     "https://arxiv.org/pdf/2410.23646",
+     "https://arxiv.org/html/2410.23646v1",
+     "https://mdpi.com/2313-0105/9/1/43",
+     "https://www.proquest.com/docview/2503525118",
+     "https://footprinthero.com/lifepo4-battery-voltage-charts",
+     "https://www.vatrerpower.com/blogs/news/lifepo4-voltage-chart-a-comprehensive-guide"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "O valor de 1 mV para cerca de 5% de SOC vem do resumo do arXiv 2410.23646, que o atribui a Zheng et al. A faixa de 0,35–0,45 V foi calculada por mim a partir das tabelas. Implicação para o projeto: usar contagem de coulombs com o INA226 da bateria e recalibrar o SOC pela tensão só nas extremidades (fim da absorção perto de 14,2–14,6 V com corrente caindo = 100%, ou abaixo de cerca de 12,0 V em repouso), sempre após repouso e com compensação de temperatura. Isso é uma recomendação de engenharia, não um dado de fonte."
+   },
+   {
+    "topic": "3. Eficiência e resistência interna",
+    "item": "Eficiência coulômbica",
+    "claim": "A Battery University (BU-808c) diz que o Li-ion tem eficiência coulômbica acima de 99%, que ela tende a melhorar com a ciclagem, e que a eficiência energética da mesma bateria é menor e depende da taxa C. Um estudo de estimativa de SOC em packs LiFePO4 (Energies, 2013) usa 0,9982 como eficiência coulômbica de base no modelo.",
+    "sources": [
+     "https://batteryuniversity.com/article/bu-808c-coulombic-and-energy-efficiency-with-the-battery",
+     "https://www2.mdpi.com/1996-1073/6/4/2007"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Para a contagem de coulombs, um η_carga de cerca de 0,99 a 0,998 é razoável. O erro do INA226 (offset e ganho) tende a pesar mais que o desvio da eficiência coulômbica, por isso convém recalibrar periodicamente."
+   },
+   {
+    "topic": "3. Eficiência e resistência interna",
+    "item": "Eficiência energética de ida e volta (round-trip)",
+    "claim": "Fontes de varejo citam cerca de 98% a 0,2C, 97% a 0,5C e 95% a 1C, e dizem que é comum passar de 92%, chegando a até 97%. Um teste de estrada com pack de 160 Ah relatou cerca de 90%. O artigo SAE 2015-01-1186 mediu a eficiência de ida e volta de um pack A123 LiFePO4 de 22,8 kWh entre 0,2C e 2C, com SOC de 10% a 90% e a 23 °C, mas os valores numéricos não foram obtidos.",
+    "sources": [
+     "https://www.anernstore.com/blogs/diy-solar-guides/round-trip-efficiency-lifepo4-battery",
+     "https://www.anernstore.com/blogs/diy-solar-guides/measuring-lithium-battery-pack-efficiency",
+     "https://saemobilus.sae.org/content/2015-01-1186",
+     "https://eg4electronics.com/wp-content/uploads/2024/07/SoH-DoD-and-Round-trip-Efficiency-Explained-Whitepaper.pdf"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Para simulação, faixa conservadora de 90% a 95% a 0,2–0,5C. Os valores revisados por pares (SAE) ficaram pendentes."
+   },
+   {
+    "topic": "3. Eficiência e resistência interna",
+    "item": "Resistência interna de packs 12,8 V 6 Ah",
+    "claim": "Valores de ficha: GWL/Elerix EX-L12V6 até 40 mΩ (descarga contínua de 3 A); KH LFP-SC-1206 até 80 mΩ; uma listagem de 12,8 V 6 Ah (6 Ah @20 h, carga máxima de 3 A, descarga máxima de 6 A) com 70 mΩ; outra listagem de 6 Ah com 30 mΩ e descarga máxima de 45 A, valor suspeito.",
+    "sources": [
+     "https://cdn.shopify.com/s/files/1/0331/8464/5253/files/Datasheet_EX-L12V6_EN-UK.pdf",
+     "https://www.lithiumbatterytech.com/wp-content/uploads/2021/05/KH-LFP-SC-1206-DATASHEET.pdf",
+     "https://www.enfsolar.com/pv/storage-system-datasheet/7198",
+     "https://www.enfsolar.com/pv/storage-system-datasheet/18009"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Faixa típica de 30 a 80 mΩ, incluindo células, interconexões e MOSFETs do BMS. Nenhuma ficha diz se o valor é AC a 1 kHz ou DC. Com 2 A, a queda fica entre 0,06 e 0,16 V, o que distorce a leitura de OCV sob carga. A atribuição de 70 mΩ à listagem 7198 (que o resumo chamou de PAC Technology) não está confirmada."
+   },
+   {
+    "topic": "4. Painéis FV ~50 W (36 células)",
+    "item": "Renogy RNG-50P (policristalino, 36 células)",
+    "claim": "Em STC: Pmax 50 W, Vmp 17,8 V, Imp 2,8 A, Voc 22,4 V, Isc 2,95 A. Coeficiente de Voc −0,30 %/°C e de Isc +0,04 %/°C. O coeficiente de Pmax é −0,44 %/°C (folha Renogy e EnergyPal) e o NOCT é 47 ± 2 °C. Mede 550 × 680 × 30 mm e pesa cerca de 5 kg.",
+    "sources": [
+     "https://www.renogy.com/template/files/2015/06/RNG-50P-Specification.pdf",
+     "https://solartown.com/content/renogy/solar-panels/monocrystalline/50-Watt-12-Volt-Polycrystalline-Solar-Panel-Specifications.pdf",
+     "https://old.energypal.com/best-solar-panels-for-homes/rng-international/rng-50p"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "O coeficiente de Pmax e o NOCT vieram de tabela com layout embaralhado. O EnergyPal dá Imp de 2,84 A. Cálculo meu: Voc a 10 °C ≈ 22,4 × (1 + 0,003 × 15) ≈ 23,4 V, útil para dimensionar o MPPT. Não é marca comum no varejo brasileiro e serve como referência completa."
+   },
+   {
+    "topic": "4. Painéis FV ~50 W (36 células)",
+    "item": "Komaes KM(P)50 / KM50(6)",
+    "claim": "A listagem do fabricante (Ningbo Komaes) dá, para 50 Wp: Vmp 17,74 V, Imp 2,84 A, Voc 21,56 V, Isc 3,04 A. As dimensões divergem entre resumos: 800 × 510 × 35 mm numa leitura e 750 × 510 × 30 mm com 4,9 kg em outra. O EnergyPal dá Vmpp de 18,6 V, o que diverge. Os coeficientes de temperatura e o NOCT não foram encontrados.",
+    "sources": [
+     "https://komaessolar.en.made-in-china.com/product/FBqEsjHDMekA/China-50W-Monocrystalline-Solar-Panel-PV-Module-with-TUV-CE-EU-Undertaking.html",
+     "https://old.energypal.com/best-solar-panels-for-homes/sonnett/sm-48p-180/compare/komaes-solar-technology/km-p-50"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "A página é do fabricante, mas em plataforma B2B e com dados inconsistentes. Exige validação."
+   },
+   {
+    "topic": "4. Painéis FV ~50 W (36 células)",
+    "item": "OSDA ODA50-18-M",
+    "claim": "50 Wp, monocristalino, eficiência de 14,43%. Coeficientes: Pmax −0,4 %/°C, Voc −0,29 %/°C, Isc +0,048 %/°C. Peso de 4,2 kg e cabo de 900 mm. Vmp, Imp, Voc, Isc, dimensões e NOCT não foram encontrados.",
+    "sources": [
+     "https://old.energypal.com/best-solar-panels-for-homes/tera/trp-50w/compare/osda-solar/oda50-18-m",
+     "https://old.energypal.com/best-solar-panels-for-homes/pro-solar/syk20-18p/compare/osda-solar/oda50-18-m"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "A OSDA é vendida no Brasil (a Pichau vende o módulo de 550 W), mas não achei ficha oficial do modelo de 50 W."
+   },
+   {
+    "topic": "4. Painéis FV ~50 W (36 células)",
+    "item": "Resun RSM50P e Sinosola SA50-36M/36P",
+    "claim": "O Resun RSM50P aparece como 50 Wp, 36 células policristalinas, cerca de 5 kg, sem dados elétricos. O Sinosola SA50-36M aparece com Isc de 2,8 A e Vmp de 19 V em comparativos. Uma ficha Sinosola de modelo não identificado traz Voc de cerca de −0,35 %/°C, Isc de +0,04 %/°C, Pmax de cerca de −0,5 %/°C e NOCT de 47 ± 2 °C (definido a 800 W/m², 20 °C e vento de 1 m/s).",
+    "sources": [
+     "https://old.energypal.com/best-solar-panels-for-homes/radical-solar/rs-80-p4-36/compare/resun-solar-energy/rsm50p",
+     "https://old.energypal.com/best-solar-panels-for-homes/novergy-energy-solutions/pca-260/compare/sinosola/sa50-36m",
+     "https://old.energypal.com/best-solar-panels-for-homes/power-world/pw75wp-125-36m/compare/sinosola/sa50-36m",
+     "https://www.enfsolar.com/Product/pdf/Crystalline/55d68231aee73.pdf"
+    ],
+    "confidence": "nao_verificado",
+    "notes": "Dados incompletos e sem confirmação de modelo. Não usar como especificação."
+   },
+   {
+    "topic": "4. Painéis FV ~50 W (36 células)",
+    "item": "Faixa típica de um módulo de 50 W com 36 células",
+    "claim": "Em vários fabricantes, um módulo de 50 W com 36 células tem Vmp entre 17,5 e 18 V, Imp entre 2,77 e 2,86 A, Voc entre 21,5 e 22,4 V e Isc entre 2,95 e 3,05 A. Os coeficientes ficam em Pmax de −0,40 a −0,50 %/°C, Voc de −0,29 a −0,35 %/°C, Isc de +0,04 a +0,05 %/°C, com NOCT entre 45 e 47 °C.",
+    "sources": [
+     "https://store.open-electronics.org/monocrystalline_modules_solar_panel_50W_12V-7500-MCRY50",
+     "https://old.energypal.com/best-solar-panels-for-homes/shine-solar/sn-p050",
+     "https://old.energypal.com/best-solar-panels-for-homes/smc-new-energy/pvm-50",
+     "https://www.renogy.com/template/files/2015/06/RNG-50P-Specification.pdf",
+     "https://www.bimblesolar.com/docs/UPsolar_60_Cell_Poly.pdf"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Síntese de várias fontes, útil como valor padrão no simulador. Os coeficientes da Upsolar são de outros modelos da marca (NOCT 45 ± 2 °C)."
+   },
+   {
+    "topic": "5. Recurso solar em Cornélio Procópio-PR",
+    "item": "Coordenadas e altitude",
+    "claim": "A sede municipal fica em cerca de 23°10′51″ S e 50°38′49″ W (−23,1808; −50,6469), com altitude de cerca de 658 m (uma fonte dá 676 m). A estação solarimétrica EPESOL do campus UTFPR-CP fica em −23,1857; −50,6567. O aeroporto SSCP fica a 567 m.",
+    "sources": [
+     "https://www.geografos.com.br/cidades-parana/cornelio-procopio.php",
+     "https://www.cidade-brasil.com.br/municipio-cornelio-procopio.html",
+     "https://bamwor.com/en/countries/brazil/cities/cornelio-procopio",
+     "https://portaldeinformacao.utfpr.edu.br/Record/riut-1-23638/Details",
+     "https://en.wikipedia.org/wiki/Corn%C3%A9lio_Proc%C3%B3pio_Airport"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "Para o projeto, use as coordenadas da estação EPESOL do campus (−23,1857; −50,6567)."
+   },
+   {
+    "topic": "5. Recurso solar em Cornélio Procópio-PR",
+    "item": "Irradiação diária média mensal (horizontal e inclinada)",
+    "claim": "Não obtive os 12 valores mensais. O CRESESB SunData dá a irradiação diária média mensal em kWh/m²·dia no plano horizontal e em planos inclinados. Ele usa a 2ª edição do Atlas Brasileiro de Energia Solar (2017), feita com 17 anos de imagens de satélite (1999–2015). No Paraná, as médias mensais vão de cerca de 2,5 a 7 kWh/m²·dia (Atlas Copel). Em Londrina (≈ 60 km, 23°23′ S), uma tabela parcial dá no plano horizontal cerca de 5,4 kWh/m²·dia em janeiro e 3,4 em junho, e no plano inclinado na latitude cerca de 4,5 a 5,5 entre janeiro e julho.",
+    "sources": [
+     "https://cresesb.cepel.br/sundata/index.php",
+     "https://labren.ccst.inpe.br/projetos/atlas_2017/atlas_solar_2017_metadados.pdf",
+     "http://mtc-m21b.sid.inpe.br/col/sid.inpe.br/mtc-m21b/2017/08.15.18.20/doc/Atlas_Brasileiro_Energia_Solar_2a_Edicao_rev-01-compactado.pdf",
+     "https://solar.copel.com/solar/atlas-solarimetrico-copel.pdf",
+     "https://periodicos.uem.br/ojs/index.php/rev_prod/article/download/52379/pdf"
+    ],
+    "confidence": "nao_verificado",
+    "notes": "Os valores de Londrina vêm de uma tabela de origem não confirmada e só cobrem de janeiro a julho. É preciso consultar o SunData ou o NASA POWER com as coordenadas do campus."
+   },
+   {
+    "topic": "5. Recurso solar em Cornélio Procópio-PR",
+    "item": "Estudos da UTFPR sobre a estação de Cornélio Procópio",
+    "claim": "Na tese da UTFPR (Souza, 2020), a irradiação global horizontal média diária medida de março a julho de 2020 ficou acima dos valores do Atlas em todas as cidades estudadas. O maior desvio entre bases foi de 11,4%, na comparação Cornélio Procópio/INMET. Os modelos de irradiação em superfície inclinada tiveram rRMSE acima de 30% em Cornélio Procópio. Entre os campi UTFPR, a ordem de irradiação é Pato Branco > Cornélio Procópio > Campo Mourão > Medianeira > Ponta Grossa > Curitiba.",
+    "sources": [
+     "https://bdtd.ibict.br/vufind/Record/UTFPR-12_54a1dccd886fa4c8256fd917e9284b82",
+     "https://portaldeinformacao.utfpr.edu.br/Record/riut-1-23638/Details",
+     "https://utfpr-ct-static-content.s3.amazonaws.com/labens.ct.utfpr.edu.br/wp-content/uploads/2020/11/28.CBPE_ANALISE-E-ESTIMATIVA-DA-IRRADIACAO-DIRETA-NORMAL-A-PARTIR-DAS-IRRADIACOES-GLOBAL-HORIZONTAL-E-DIFUSA-PARA-O-ESTADO-DO-PARANA.pdf",
+     "https://repositorio.utfpr.edu.br/jspui/bitstream/1/28937/1/CP_COELT_2020_1_42.pdf"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "O TCC de Raí Augusto Silva (UTFPR-CP, 2020, CP_COELT_2020_1_42) tem uma tabela de irradiação diária média e temperatura de Cornélio Procópio, mas não consegui ler os valores. A estação EPESOL do campus pode ser fonte de dados medidos para validar o projeto."
+   },
+   {
+    "topic": "5. Recurso solar em Cornélio Procópio-PR",
+    "item": "Temperaturas de novembro",
+    "claim": "A climatologia do Climatempo dá para novembro mínima de cerca de 19 °C, máxima de cerca de 29 °C e precipitação de 142 mm. A média aproximada é de 24 °C.",
+    "sources": [
+     "https://www.climatempo.com.br/climatologia/1308/cornelioprocopio-pr",
+     "https://www.wfy24.com/en/climate/cornelio-procopio-br415523010"
+    ],
+    "confidence": "fonte_secundaria",
+    "notes": "A tabela veio sem cabeçalho, então que 19 °C e 29 °C são mínima e máxima é inferência pela estrutura. O wfy24 é coerente nos meses vizinhos (dezembro com mínima de 16 °C e máxima de 29 °C). Para o modelo térmico do painel, com NOCT de cerca de 47 °C e 800 W/m², a célula pode passar de 55 a 60 °C à tarde (estimativa minha)."
+   },
+   {
+    "topic": "6. Fontes de dados meteorológicos",
+    "item": "Estação automática do INMET em Cornélio Procópio ou perto",
+    "claim": "A tese da UTFPR compara dados de 'Cornélio Procópio/INMET' com a estação EPESOL, o que indica uma estação do INMET usada como referência no município ou perto dele, mas o código (A8xx) não foi confirmado. Em Londrina, a estação automática citada em estudos é do SIMEPAR, no mesmo local da estação convencional do IAPAR, e não do INMET. Os dados horários das automáticas (últimos 90 dias) ficam em tempo.inmet.gov.br e o histórico no BDMEP.",
+    "sources": [
+     "https://bdtd.ibict.br/vufind/Record/UTFPR-12_54a1dccd886fa4c8256fd917e9284b82",
+     "https://portal.inmet.gov.br/servicos/esta%C3%A7%C3%B5es-autom%C3%A1ticas",
+     "https://ojs.uel.br/revistas/uel/index.php/semagrarias/article/view/2817"
+    ],
+    "confidence": "nao_verificado",
+    "notes": "O código A834 é de Tramandaí-RS e não serve. Confirmar no catálogo de estações do INMET filtrando por PR."
+   },
+   {
+    "topic": "6. Fontes de dados meteorológicos",
+    "item": "Open-Meteo: acesso gratuito e licença",
+    "claim": "O Open-Meteo é gratuito para uso não comercial, sem chave de API, cadastro ou cartão. Recomenda assinatura para uso comercial ou acima de cerca de 10.000 chamadas por dia. Os dados são CC BY 4.0, com atribuição exigida, e serviços abusivos podem ser bloqueados.",
+    "sources": [
+     "https://open-meteo.com/",
+     "https://github.com/schicho/open-meteo"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "Um projeto de IC se enquadra como não comercial. O ESP32 ou o backend devem fazer poucas chamadas por hora."
+   },
+   {
+    "topic": "6. Fontes de dados meteorológicos",
+    "item": "Open-Meteo: global_tilted_irradiance e shortwave_radiation",
+    "claim": "shortwave_radiation é a média da hora anterior da irradiância global horizontal (direta + difusa), em W/m². global_tilted_irradiance é a média da hora anterior da irradiância total no plano inclinado, calculada com albedo fixo de 20% e céu isotrópico. Exige os parâmetros tilt (0° a 90°) e azimuth, com 0° = sul, −90° = leste, +90° = oeste e ±180° = norte. 'nan' em azimuth ou tilt simula seguidor solar. Um post do próprio Open-Meteo anuncia o GTI nas APIs. Uma issue no GitHub relata valores levemente negativos (por exemplo −1,0 e −1,6 W/m²).",
+    "sources": [
+     "https://open-meteo.com/en/docs/satellite-radiation-api",
+     "https://openmeteo.substack.com/p/global-tilted-irradiance-gti-meteofrance",
+     "https://github.com/open-meteo/open-meteo/issues/1355",
+     "https://hub.meltano.com/extractors/tap-openmeteo"
+    ],
+    "confidence": "verificado_fonte_primaria",
+    "notes": "A semântica dos parâmetros foi confirmada na página da Satellite Radiation API. Que o GTI está no endpoint /v1/forecast vem do título do anúncio e precisa de uma chamada de teste. Para Cornélio Procópio (hemisfério sul), o painel virado para o norte usa azimuth=180 e tilt de cerca de 23° (latitude), cálculo meu pela convenção. Convém limitar valores negativos a 0 no backend."
+   }
+  ],
+  "open_issues": [
+   "Ainda faltam os 12 valores mensais de irradiação (kWh/m²·dia) para Cornélio Procópio, no plano horizontal e inclinado em cerca de 23° (latitude). Consultar o CRESESB SunData (https://cresesb.cepel.br/sundata/) ou o NASA POWER com lat −23,1857 e lon −50,6567. A busca não trouxe a tabela e o limite de buscas desta rodada (200 WebSearch) acabou antes de completar.",
+   "Falta o código e a situação atual da estação automática do INMET em Cornélio Procópio ou na vizinhança. Há indício indireto de uma estação 'Cornélio Procópio/INMET' na tese UTFPR (Souza, 2020), mas o código A8xx não foi confirmado. Conferir no catálogo de estações do INMET ou no BDMEP.",
+   "Falta a ficha técnica da bateria LiFePO4 12,8 V 6 Ah (e 12 Ah) que será comprada no Brasil (Unipower, Ultracell ou genérica). Pedir ao fornecedor: corrente contínua e de pico de carga e descarga do BMS, tensões de corte de sobrecarga e sobredescarga com valores de rearme, faixa de temperatura de carga, se há bloqueio de carga abaixo de 0 °C, resistência interna e ciclos com DOD e critério de fim de vida.",
+   "A tabela da Ritar R-LFP12.8V6Ah (máx. carga 6 A, recomendada 3 A, 14,6 V, descarga 6 A, 12 A @ 10 s, fim de descarga 11,2 V) saiu embaralhada. Validar no PDF original. O domínio mantech.co.za não resolve nesta sessão e precisaria ser liberado nas configurações de rede.",
+   "O corte de carga de 15,2 V atribuído ao KH LFP-SC-1206 diverge do padrão de 14,6 V. Confirmar se é tensão de carga ou limiar de proteção.",
+   "Os limiares do BMS do ExpertPower EP125 (3,65 V e 2,2 V por célula, sobrecorrente acima de 15 A com cerca de 1 s) vieram de extração imperfeita do PDF. Validar.",
+   "Não há ficha técnica oficial completa de painel de 50 W de marca vendida no Brasil (Resun, Sinosola, Upsolar, Komaes, OSDA). Do Komaes KM(P)50 faltam os coeficientes de temperatura, o NOCT e a dimensão correta (800 × 510 × 35 mm ou 750 × 510 × 30 mm), e o Vmp diverge (17,74 V ou 18,6 V). Do OSDA ODA50-18-M faltam Vmp, Imp, Voc, Isc, dimensões e NOCT. Pedir o datasheet do módulo que será comprado ou medir a curva I-V na bancada.",
+   "O NOCT (47 ± 2 °C) e o coeficiente de Pmax (−0,44 %/°C) do Renogy RNG-50P vieram de tabela com layout embaralhado. Validar no PDF da Renogy.",
+   "A curva OCV × SOC usada vem de blogs e fabricantes, sem método de ensaio declarado, e as fontes divergem principalmente abaixo de 20% de SOC (0% entre 9,5 e 10 V). O ideal é levantar a curva OCV × SOC do pack real com descarga em pulsos e repouso de pelo menos 30 min a 1 h, usando o INA226.",
+   "Os valores revisados por pares de eficiência de ida e volta (SAE 2015-01-1186) não foram obtidos. A faixa de 90% a 98% vem de fontes de varejo.",
+   "Confirmar com uma chamada de teste que global_tilted_irradiance está disponível em /v1/forecast (e não só na Satellite Radiation API) para a região, com tilt=23 e azimuth=180, e verificar qual modelo meteorológico o Open-Meteo usa para o sul do Brasil.",
+   "Confirmar em fonte oficial (Climatempo com cabeçalho ou Normais Climatológicas do INMET) a temperatura mínima e máxima média de novembro em Cornélio Procópio (≈ 19 °C e 29 °C)."
+  ]
+ },
+ {
+  "key": "referencias",
+  "findings": [
+   {
+    "topic": "infraestrutura_da_verificacao",
+    "item": "Limite de buscas e acesso à rede",
+    "claim": "Não foi possível fazer nenhuma verificação online nesta etapa. A cota de WebSearch do turno (200 chamadas, compartilhada entre todos os agentes do workflow) já estava esgotada quando a primeira busca deste agente foi feita, e as 6 buscas da parte A voltaram sem resultado. A única tentativa de WebFetch, uma consulta única de metadados na API do Crossref (api.crossref.org) para os 25 DOIs em análise, falhou com ENOTFOUND porque o domínio está fora da lista de rede permitida da sessão. Um curl direto ao Crossref também foi recusado pelo proxy (403). Por isso, todos os itens abaixo estão classificados como nao_verificado.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "Para concluir: (1) peça ao usuário para mandar uma mensagem de acompanhamento e retomar as buscas com nova cota, ou aumentar CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION; (2) ou libere api.crossref.org e doi.org nas configurações de rede da sessão. Assim, uma única chamada https://api.crossref.org/works?filter=doi:...,doi:... confirma todos os DOIs de uma vez."
+   },
+   {
+    "topic": "A_verificacao_referencias",
+    "item": "1. ESSAYEH et al. (2021), J. Electrical and Computer Engineering, DOI 10.1155/2021/6675975",
+    "claim": "NÃO ENCONTRADO (não verificado): a busca não foi executada. O formato do DOI (10.1155/AAAA/ID-do-artigo) é o padrão Hindawi, o que é compatível com um artigo do Journal of Electrical and Computer Engineering de 2021 com Article ID 6675975. Isso indica apenas que o formato é plausível, não confirma título, autores nem existência. Não consigo confirmar de memória a lista de autores nem a grafia do sobrenome 'Essayeh'.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "URL a checar: https://doi.org/10.1155/2021/6675975. Periódicos Hindawi usam número de artigo (Article ID) em vez de páginas; a referência ABNT deve trazer 'v. 2021, art. 6675975'. Confirmar autores, a grafia de 'Essayeh' e o título exato, incluindo maiúsculas em 'MicroGrid'."
+   },
+   {
+    "topic": "A_verificacao_referencias",
+    "item": "2. Recent developments of energy management strategies in microgrids (Energy Conversion and Management, 2023), DOI 10.1016/j.enconman.2023.117723",
+    "claim": "NÃO VERIFICADO: o DOI não pôde ser checado. Pela memória do modelo, sem confirmação, o artigo seria de MBUNGU, N. T. et al. (coautores possivelmente incluindo R. C. Bansal e A. K. Hamid), Energy Conversion and Management, v. 297, art. 117723, 2023. O formato do DOI (j.enconman.2023.NNNNNN, número de artigo de 6 dígitos) é compatível com a Elsevier.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "URL a checar: https://doi.org/10.1016/j.enconman.2023.117723. Não use o primeiro autor, o volume (297) nem os coautores sem confirmar na página da Elsevier ou do Crossref."
+   },
+   {
+    "topic": "A_verificacao_referencias",
+    "item": "3. Maximum power point tracking algorithms for photovoltaic system – A review (RSER 2016), DOI 10.1016/j.rser.2015.12.105",
+    "claim": "NÃO VERIFICADO: pela memória do modelo, os autores seriam S. SARAVANAN e N. RAMESH BABU, em Renewable and Sustainable Energy Reviews, v. 57, p. 192–204, 2016. Isso bate com o par de autores que você sugeriu ('Saravanan e Ramesh Babu'). O sufixo do DOI de 2015 é coerente com a Elsevier, que atribui o DOI na aceitação (dez/2015) e publica o volume em 2016.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "URL a checar: https://doi.org/10.1016/j.rser.2015.12.105. Na ABNT, o nome do segundo autor fica 'RAMESH BABU, N.' (sobrenome composto). Confirmar volume e páginas."
+   },
+   {
+    "topic": "A_verificacao_referencias",
+    "item": "4. ATTANAYAKA et al. (2019), AIMS Energy 7(2):186–210, DOI 10.3934/energy.2019.2.186",
+    "claim": "NÃO VERIFICADO: a estrutura do DOI (energy.ANO.FASCÍCULO.PÁGINA_INICIAL = 2019.2.186) é internamente consistente com volume 7, fascículo 2 e página inicial 186. Pela memória do modelo, os autores seriam A. M. S. M. H. S. Attanayaka, J. P. Karunadasa e K. T. M. U. Hemapala, o que ainda não foi confirmado.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "URL a checar: https://doi.org/10.3934/energy.2019.2.186. Confirmar a página final (210) e os autores."
+   },
+   {
+    "topic": "A_verificacao_referencias",
+    "item": "5. A Review of Modeling, Management, and Applications of Grid-Connected Li-Ion Battery Storage Systems (IEEE Trans. Smart Grid 2022), DOI 10.1109/TSG.2022.3188598",
+    "claim": "NÃO ENCONTRADO (não verificado): a busca não foi executada. O formato do DOI (10.1109/TSG.2022.NNNNNNN) é o padrão IEEE para a Transactions on Smart Grid. Não sei de memória, com segurança, os autores, o volume, o número nem as páginas desse artigo.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "URL a checar: https://doi.org/10.1109/TSG.2022.3188598 (IEEE Xplore). Os DOIs do IEEE costumam ser atribuídos na fase 'Early Access'. Confirme se o ano de publicação no fascículo é 2022 e anote o volume, o número e as páginas."
+   },
+   {
+    "topic": "A_verificacao_referencias",
+    "item": "6. A review of modeling and simulation tools for microgrids based on solar photovoltaics (Frontiers in Energy Research 2022), DOI 10.3389/fenrg.2022.772561",
+    "claim": "NÃO ENCONTRADO (não verificado): a busca não foi executada. O formato do DOI (10.3389/fenrg.ANO.ID) é o padrão Frontiers, compatível com um artigo de 2022, provavelmente no v. 10, com número de artigo 772561. Os autores não são conhecidos com segurança.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "URL a checar: https://doi.org/10.3389/fenrg.2022.772561. Na Frontiers, a referência leva o número do artigo em vez de páginas. Confirme o título exato, os autores e o volume."
+   },
+   {
+    "topic": "B_referencias_sugeridas",
+    "item": "MPC em microrredes: PARISIO, RIKOS e GLIELMO (2014)",
+    "claim": "CANDIDATA (não verificada): PARISIO, A.; RIKOS, E.; GLIELMO, L. 'A Model Predictive Control Approach to Microgrid Operation Optimization'. IEEE Transactions on Control Systems Technology, v. 22, n. 5, p. 1813–1827, 2014. DOI 10.1109/TCST.2013.2295737. Formula o MPC com programação inteira mista para microrrede com armazenamento.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "Metadados lembrados pelo modelo, sem checagem. Confirmar em https://doi.org/10.1109/TCST.2013.2295737 antes de citar."
+   },
+   {
+    "topic": "B_referencias_sugeridas",
+    "item": "MPC em microrredes (revisão): HU et al. (2021)",
+    "claim": "CANDIDATA (não verificada): HU, J.; SHAN, Y.; GUERRERO, J. M.; IOINOVICI, A.; CHAN, K. W.; RODRIGUEZ, J. 'Model predictive control of microgrids – An overview'. Renewable and Sustainable Energy Reviews, v. 136, art. 110422, 2021. DOI 10.1016/j.rser.2020.110422.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "Confirmar a lista completa de autores em https://doi.org/10.1016/j.rser.2020.110422."
+   },
+   {
+    "topic": "B_referencias_sugeridas",
+    "item": "MPC em microrredes (revisão de acesso aberto): GARCIA-TORRES et al. (2021)",
+    "claim": "CANDIDATA (não verificada): GARCIA-TORRES, F. et al. 'Model Predictive Control for Microgrid Functionalities: Review and Future Challenges'. Energies, v. 14, n. 5, art. 1296, 2021. DOI 10.3390/en14051296.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "Acesso aberto (MDPI). Confirmar em https://doi.org/10.3390/en14051296."
+   },
+   {
+    "topic": "B_referencias_sugeridas",
+    "item": "Comparação e classificação de estratégias de EMS (regras × otimização × MPC): ZIA, ELBOUCHIKHI e BENBOUZID (2018)",
+    "claim": "CANDIDATA (não verificada): ZIA, M. F.; ELBOUCHIKHI, E.; BENBOUZID, M. 'Microgrids energy management systems: A critical review on methods, solutions, and prospects'. Applied Energy, v. 222, p. 1037–1054, 2018. DOI 10.1016/j.apenergy.2018.04.103.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "É uma revisão de métodos (heurísticos/regras, programação matemática, MPC, metaheurísticas) e serve para justificar a comparação regras × MPC. Não encontrei de memória, com confiança, um artigo específico de comparação experimental regras × MPC em microrrede CC de pequeno porte; buscar quando houver cota."
+   },
+   {
+    "topic": "B_referencias_sugeridas",
+    "item": "SOC por contagem de Coulomb e fontes de erro: MOVASSAGH et al. (2021)",
+    "claim": "CANDIDATA (não verificada): MOVASSAGH, K.; RAIHAN, A.; BALASINGAM, B.; PATTIPATI, K. 'A Critical Look at Coulomb Counting Approach for State of Charge Estimation in Batteries'. Energies, v. 14, n. 14, art. 4074, 2021. DOI 10.3390/en14144074. Analisa erros de offset/ganho do sensor de corrente, SOC inicial, capacidade e amostragem.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "É muito pertinente ao uso do INA226 (offset e ganho do shunt). Confirmar em https://doi.org/10.3390/en14144074."
+   },
+   {
+    "topic": "B_referencias_sugeridas",
+    "item": "Contagem de Coulomb aprimorada: NG et al. (2009)",
+    "claim": "CANDIDATA (não verificada): NG, K. S.; MOO, C.-S.; CHEN, Y.-P.; HSIEH, Y.-C. 'Enhanced coulomb counting method for estimating state-of-charge and state-of-health of lithium-ion batteries'. Applied Energy, v. 86, n. 9, p. 1506–1511, 2009. DOI 10.1016/j.apenergy.2008.11.021.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "Confirmar em https://doi.org/10.1016/j.apenergy.2008.11.021."
+   },
+   {
+    "topic": "B_referencias_sugeridas",
+    "item": "Monitoramento FV de baixo custo: FUENTES et al. (2014)",
+    "claim": "CANDIDATA (não verificada): FUENTES, M.; VIVAR, M.; BURGOS, J. M.; AGUILERA, J.; VACAS, J. A. 'Design of an accurate, low-cost autonomous data logger for PV system monitoring using Arduino™ that complies with IEC standards'. Solar Energy Materials and Solar Cells, v. 130, p. 529–543, 2014. DOI 10.1016/j.solmat.2014.08.008.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "A plataforma é Arduino, não ESP32, mas é referência clássica de data logger FV de baixo custo com validação metrológica (IEC 61724). Confirmar coautores e páginas."
+   },
+   {
+    "topic": "B_referencias_sugeridas",
+    "item": "Monitoramento FV IoT: LÓPEZ-VARGAS, FUENTES e VIVAR (2019)",
+    "claim": "CANDIDATA (não verificada): LÓPEZ-VARGAS, A.; FUENTES, M.; VIVAR, M. 'IoT Application for Real-Time Monitoring of Solar Home Systems Based on Arduino™ With 3G Connectivity'. IEEE Sensors Journal, v. 19, n. 2, p. 679–691, 2019. DOI 10.1109/JSEN.2018.2876635.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "Confirmar em https://doi.org/10.1109/JSEN.2018.2876635. Não tenho de memória, com confiança, um artigo revisado por pares específico com ESP32 + INA219/INA226 + MQTT; precisa de busca dedicada."
+   },
+   {
+    "topic": "B_referencias_sugeridas",
+    "item": "Modelo de desempenho FV PVWatts: DOBOS (2014)",
+    "claim": "CANDIDATA (não verificada): DOBOS, A. P. 'PVWatts Version 5 Manual'. Golden, CO: National Renewable Energy Laboratory, 2014. Relatório técnico NREL/TP-6A20-62641. DOI 10.2172/1158421 (OSTI).",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "Confirmar o número do relatório e o DOI em https://doi.org/10.2172/1158421 (OSTI.gov)."
+   },
+   {
+    "topic": "B_referencias_sugeridas",
+    "item": "Temperatura de célula / NOCT: SKOPLAKI e PALYVOS (2009)",
+    "claim": "CANDIDATA (não verificada): SKOPLAKI, E.; PALYVOS, J. A. 'Operating temperature of photovoltaic modules: A survey of pertinent correlations'. Renewable Energy, v. 34, n. 1, p. 23–29, 2009. DOI 10.1016/j.renene.2008.04.009. Reúne correlações de temperatura de célula, incluindo a baseada em NOCT, T_c = T_a + (NOCT − 20)/800 · G.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "Os mesmos autores têm outro artigo em Solar Energy 83(5):614–624 (2009), DOI 10.1016/j.solener.2008.10.008, sobre a dependência da eficiência com a temperatura. Também não verificado."
+   },
+   {
+    "topic": "B_referencias_sugeridas",
+    "item": "Modelos de céu claro (Haurwitz, Ineichen e outros): RENO, HANSEN e STEIN (2012)",
+    "claim": "CANDIDATA (não verificada): RENO, M. J.; HANSEN, C. W.; STEIN, J. S. 'Global Horizontal Irradiance Clear Sky Models: Implementation and Analysis'. Albuquerque: Sandia National Laboratories, 2012. Relatório SAND2012-2389. DOI 10.2172/1039404. Compara modelos de céu claro, incluindo Haurwitz e Ineichen-Perez.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "Confirmar em https://doi.org/10.2172/1039404. A fonte original de Haurwitz seria HAURWITZ, B. 'Insolation in relation to cloudiness and cloud density'. Journal of Meteorology, v. 2, p. 154–166, 1945, com DOI no padrão AMS 10.1175/1520-0469(1945)002<0154:IIRTCA>2.0.CO;2. Não verificado."
+   },
+   {
+    "topic": "B_referencias_sugeridas",
+    "item": "Céu claro Ineichen: INEICHEN e PEREZ (2002)",
+    "claim": "CANDIDATA (não verificada): INEICHEN, P.; PEREZ, R. 'A new airmass independent formulation for the Linke turbidity coefficient'. Solar Energy, v. 73, n. 3, p. 151–157, 2002. DOI 10.1016/S0038-092X(02)00045-2.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "Confirmar em https://doi.org/10.1016/S0038-092X(02)00045-2."
+   },
+   {
+    "topic": "B_referencias_sugeridas",
+    "item": "Decomposição difusa/direta: ERBS, KLEIN e DUFFIE (1982)",
+    "claim": "CANDIDATA (não verificada): ERBS, D. G.; KLEIN, S. A.; DUFFIE, J. A. 'Estimation of the diffuse radiation fraction for hourly, daily and monthly-average global radiation'. Solar Energy, v. 28, n. 4, p. 293–302, 1982. DOI 10.1016/0038-092X(82)90302-4.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "Confirmar em https://doi.org/10.1016/0038-092X(82)90302-4."
+   },
+   {
+    "topic": "B_referencias_sugeridas",
+    "item": "Ferramenta que implementa PVWatts, céu claro e Erbs: HOLMGREN, HANSEN e MIKOFSKI (2018), pvlib python",
+    "claim": "CANDIDATA (não verificada): HOLMGREN, W. F.; HANSEN, C. W.; MIKOFSKI, M. A. 'pvlib python: a python package for modeling solar energy systems'. Journal of Open Source Software, v. 3, n. 29, art. 884, 2018. DOI 10.21105/joss.00884.",
+    "sources": [],
+    "confidence": "nao_verificado",
+    "notes": "Útil se a simulação do projeto usar pvlib. Confirmar em https://doi.org/10.21105/joss.00884."
+   }
+  ],
+  "open_issues": [
+   "Bloqueio de infraestrutura: a cota de WebSearch do turno (200 buscas, compartilhada pelo workflow) acabou antes da primeira busca deste agente, e api.crossref.org não resolve pela rede da sessão (ENOTFOUND no WebFetch, 403 no proxy via curl). Para concluir a verificação: mande uma mensagem de acompanhamento para retomar as buscas, aumente CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION ou libere api.crossref.org e doi.org nas configurações de rede.",
+   "Parte A, refs 1 a 6: título, autores, periódico, ano, volume/páginas e DOI seguem pendentes. Só foi checada a consistência do formato de cada DOI com o padrão da editora (Hindawi, Elsevier, AIMS, IEEE, Frontiers), o que não prova que o artigo existe.",
+   "Ref 1 (Essayeh 2021): confirmar a lista de autores e a grafia do sobrenome. Na ABNT, usar o Article ID 6675975 no lugar de páginas.",
+   "Ref 2 (enconman 2023.117723): confirmar se o primeiro autor é Mbungu, N. T. e se o volume é 297 (memória do modelo, não verificada).",
+   "Ref 3 (rser.2015.12.105): confirmar os autores S. Saravanan e N. Ramesh Babu, o volume 57 e as páginas 192–204 (memória do modelo, não verificada).",
+   "Ref 4 (AIMS Energy): confirmar os autores (Attanayaka, Karunadasa, Hemapala) e a página final 210.",
+   "Ref 5 (IEEE TSG 2022): autores, volume, número e páginas são desconhecidos; consultar o IEEE Xplore.",
+   "Ref 6 (Frontiers 2022): autores e volume (provavelmente v. 10, art. 772561) desconhecidos; consultar frontiersin.org.",
+   "Parte B: as 14 referências candidatas vêm da memória do modelo e NENHUMA foi confirmada por busca. Não as inclua na bibliografia do relatório de IC antes de resolver cada DOI em https://doi.org/<DOI>.",
+   "Parte B, lacunas: falta uma referência revisada por pares específica de monitoramento com ESP32 + INA219/INA226 + MQTT, e falta um estudo comparativo experimental regras × MPC em microrrede CC de pequeno porte com bateria. Ambas precisam de busca dedicada."
+  ]
+ }
+]
