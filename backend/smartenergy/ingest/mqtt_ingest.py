@@ -161,6 +161,7 @@ class MqttIngest:
         self._client.on_connect = self._on_connect
         self._client.on_disconnect = self._on_disconnect
         self._client.on_message = self._on_message
+        self._client.on_connect_fail = self._on_connect_fail
 
     @property
     def stats(self) -> Counter[str]:
@@ -176,6 +177,11 @@ class MqttIngest:
         self.connected.set()
         log.info("MQTT conectado a %s:%s; assinaturas: %s", self.settings.host, self.settings.port,
                  ", ".join(t for t, _ in self.handler.subscriptions))
+
+    def _on_connect_fail(self, _c: Any, _u: Any) -> None:
+        self.handler.stats["connect_failures"] += 1
+        log.warning("broker MQTT %s:%s inacessível; nova tentativa automática",
+                    self.settings.host, self.settings.port)
 
     def _on_disconnect(self, _c: Any, _u: Any, _f: Any, reason_code: Any, _p: Any = None) -> None:
         self.connected.clear()

@@ -19,6 +19,7 @@ SUBCOMMANDS: dict[str, tuple[str, str]] = {
     "ingest": ("smartenergy.ingest.cli", "Assina o MQTT e armazena telemetria/decisões/eventos."),
     "twin": ("smartenergy.twin.cli", "Dispositivo virtual: publica telemetria SIMULADA via MQTT."),
     "sign-cmd": ("smartenergy.security.cli", "Assina e (opcionalmente) publica um comando sem.cmd.v1."),
+    "live-ems": ("smartenergy.live.cli", "EMS preditivo ao vivo (MPC): publica set_loads assinados via MQTT."),
 }
 
 

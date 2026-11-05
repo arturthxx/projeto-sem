@@ -250,12 +250,13 @@ def create_app(
 
     # ------------------------------------------------------------------ dashboard
     dash = Path(st.dashboard_dir) if st.dashboard_dir else None
-    if dash is not None and dash.is_dir():
-        app.mount("/", StaticFiles(directory=str(dash), html=True), name="dashboard")
-    else:
+    if dash is None or not (dash / "index.html").is_file():
         @app.get("/")
         def root() -> dict[str, Any]:
             return {"source": backend.default_source(), "msg": "dashboard não encontrado; API em /api/meta",
                     "demo": backend.demo}
+
+    if dash is not None and dash.is_dir():  # registrado por último: /api/* tem precedência
+        app.mount("/", StaticFiles(directory=str(dash), html=True), name="dashboard")
 
     return app

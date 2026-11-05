@@ -138,12 +138,22 @@ def telemetry_to_inputs(
     )
 
 
-def set_loads_args(dec: Decision) -> dict[str, Any]:
-    """Argumentos ``set_loads`` (todas as cargas, ordenadas por id) a partir da decisão."""
+def set_loads_args(dec: Decision, cfg: SystemConfig | None = None) -> dict[str, Any]:
+    """Argumentos ``set_loads`` (todas as cargas, ordenadas por id) a partir da decisão.
+
+    Com ``cfg``, normaliza o duty às regras de validação do firmware (docs/05 §7):
+    carga não dimerizável ligada → 1; dimerizável ligada → ``max(min_duty, duty)``;
+    desligada → 0.
+    """
+    by_id = {ld.id: ld for ld in cfg.loads} if cfg is not None else {}
     loads = []
     for c in sorted(dec.commands.values(), key=lambda c: c.id):
         on = bool(c.on)
-        loads.append({"id": int(c.id), "on": on, "duty": round(min(max(float(c.duty), 0.0), 1.0), 4) if on else 0.0})
+        duty = min(max(float(c.duty), 0.0), 1.0) if on else 0.0
+        ld = by_id.get(int(c.id))
+        if on and ld is not None:
+            duty = max(ld.min_duty, duty) if ld.dimmable else 1.0
+        loads.append({"id": int(c.id), "on": on, "duty": round(duty, 4)})
     return {"loads": loads}
 
 
@@ -156,9 +166,10 @@ def decision_payload(
     prev_state: str | None,
     command_sent: bool,
     forecast_method: str | None = None,
+    cfg: SystemConfig | None = None,
 ) -> dict[str, Any]:
     """Monta ``sem.decision.v1`` com ``origin="backend"`` (docs/05 §5)."""
-    actions = set_loads_args(dec)["loads"] if command_sent else []
+    actions = set_loads_args(dec, cfg)["loads"] if command_sent else []
     reason = dec.reason if command_sent else f"sem comando enviado (dispositivo segue regras locais): {dec.reason}"
     plan = dict(dec.plan) if isinstance(dec.plan, Mapping) else None
     if plan is not None and forecast_method:
@@ -295,7 +306,7 @@ class LiveEmsService:
         out: list[Published] = []
         send = not dec.fallback
         if send:
-            cmd = build_command("set_loads", set_loads_args(dec), self.ttl_s, ts_ms=int(self.clock() * 1000))
+            cmd = build_command("set_loads", set_loads_args(dec, self.cfg), self.ttl_s, ts_ms=int(self.clock() * 1000))
             out.append(Published(self.topics.cmd, envelope_to_json(sign_command(cmd, self.key)), 1))
             self.stats["commands"] += 1
         else:
@@ -303,7 +314,7 @@ class LiveEmsService:
             log.warning("MPC em fallback; nenhum comando enviado: %s", dec.reason)
         doc = decision_payload(dec, inp, source=str(payload["source"]), safety=str(payload["ems"]["safety"]),
                                prev_state=self._prev_state, command_sent=send,
-                               forecast_method=self.forecast_method)
+                               forecast_method=self.forecast_method, cfg=self.cfg)
         self._prev_state = dec.state
         err = schema_error("decision", doc)
         if err is None:
@@ -327,6 +338,8 @@ class LiveEmsRunner:
         self._client = make_client(settings, "live-ems")
         self._client.on_connect = self._on_connect
         self._client.on_message = self._on_message
+        self._client.on_connect_fail = lambda _c, _u: log.warning(
+            "broker MQTT %s:%s inacessível; nova tentativa automática", settings.host, settings.port)
         self._queue: queue.Queue[dict[str, Any]] = queue.Queue(maxsize=200)
         self.service = service_factory(self._publish)
         self._stop = threading.Event()

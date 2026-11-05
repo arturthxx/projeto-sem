@@ -1,0 +1,49 @@
+# ACL do Mosquitto - Smart Energy Manager (prefixo comm.mqtt_prefix = smartenergy)
+# Principio do menor privilegio:
+#   - dispositivo (ESP32) e gemeo digital PUBLICAM telemetria/eventos/decisoes/acks e ASSINAM cmd;
+#   - backend ASSINA o que o dispositivo publica e PUBLICA cmd (+ decisoes do MPC);
+#   - monitor (Grafana/Node-RED/healthcheck) apenas le.
+# Usuarios sem regra nao tem acesso a nenhum topico.
+
+# ---------------------------------------------------------------- dispositivo
+user sem-device
+topic write smartenergy/telemetry
+topic write smartenergy/pv/#
+topic write smartenergy/battery/#
+topic write smartenergy/load/#
+topic write smartenergy/ems/mode
+topic write smartenergy/ems/decision
+topic write smartenergy/system/status
+topic write smartenergy/system/event
+topic write smartenergy/cmd/ack
+topic read smartenergy/cmd
+
+# ---------------------------------------------------------------- gemeo digital (dados SIMULADOS)
+user sem-twin
+topic write smartenergy/telemetry
+topic write smartenergy/pv/#
+topic write smartenergy/battery/#
+topic write smartenergy/load/#
+topic write smartenergy/ems/mode
+topic write smartenergy/ems/decision
+topic write smartenergy/system/status
+topic write smartenergy/system/event
+topic write smartenergy/cmd/ack
+topic read smartenergy/cmd
+
+# ---------------------------------------------------------------- backend (ingest, API, live-ems)
+user sem-backend
+topic read smartenergy/telemetry
+topic read smartenergy/pv/#
+topic read smartenergy/battery/#
+topic read smartenergy/load/#
+topic read smartenergy/ems/#
+topic read smartenergy/system/#
+topic read smartenergy/cmd/ack
+topic write smartenergy/cmd
+topic write smartenergy/ems/decision
+
+# ---------------------------------------------------------------- somente leitura
+user sem-monitor
+topic read smartenergy/#
+topic read $SYS/#
