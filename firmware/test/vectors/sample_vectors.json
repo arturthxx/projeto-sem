@@ -1,0 +1,130 @@
+{
+  "schema": "sem.vectors.v1",
+  "comment": "Vetores PEQUENOS escritos a mao para validar o harness (valores esperados calculados manualmente a partir de docs/06). O arquivo completo rules_vectors.json e gerado pelo backend Python.",
+  "params": {
+    "rules": {"normal_min_soc": 0.70, "economy_min_soc": 0.40, "critical_min_soc": 0.20, "hysteresis_soc": 0.05,
+              "economy_medium_duty": 0.60, "min_dwell_s": 300, "surplus_on_soc": 0.90, "surplus_off_soc": 0.80,
+              "economy_surplus_margin_w": 2.0, "deadline_margin_s": 1800},
+    "loads": [
+      {"id": 1, "key": "led", "priority": "high", "p_nom_w": 5.0, "dimmable": false, "min_duty": null, "deferrable": null},
+      {"id": 2, "key": "fan", "priority": "medium", "p_nom_w": 6.0, "dimmable": true, "min_duty": 0.40, "deferrable": null},
+      {"id": 3, "key": "res", "priority": "low", "p_nom_w": 16.4, "dimmable": false, "min_duty": null,
+       "deferrable": {"daily_energy_wh": 40.0, "window_start_s": 25200, "deadline_s": 79200}}
+    ],
+    "soc": {"capacity_ah": 6.0, "coulombic_efficiency": 0.99, "r_internal_ohm": 0.04, "current_deadband_a": 0.005,
+            "full_voltage_v": 14.0, "full_tail_current_a": 0.30, "full_hold_s": 120, "empty_voltage_v": 11.8,
+            "empty_hold_s": 30, "empty_soc_value": 0.05, "unknown_initial_uncertainty": 0.30, "sync_uncertainty": 0.02,
+            "drift_uncertainty_per_ah": 0.01,
+            "ocv_soc": [0.00, 0.05, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 0.95, 0.99, 1.00],
+            "ocv_v": [10.00, 11.60, 12.00, 12.80, 12.95, 13.00, 13.05, 13.10, 13.15, 13.20, 13.30, 13.35, 13.45, 13.60]},
+    "safety": {"lvd_v": 11.6, "lvd_delay_s": 5, "soc_hard_min": 0.10, "reconnect_v": 12.9, "reconnect_min_soc": 0.25,
+               "bus_ovp_v": 15.0, "bus_ovp_delay_s": 1, "bus_overcurrent_a": 4.0, "bus_overcurrent_delay_ms": 200,
+               "overcurrent_retry_s": 30, "overcurrent_max_retries": 3, "battery_overtemp_c": 55.0,
+               "battery_overtemp_release_c": 45.0, "sensor_timeout_s": 3, "boot_settle_samples": 20}
+  },
+  "rules": [
+    {"name": "histerese_economia_protecao", "steps": [
+      {"t_s": 0, "tod_s": 64800, "soc": 0.75, "soc_valid": true, "p_bat": -20.0, "d": {"led": true, "fan": true}, "e_done_wh": {"res": 0.0},
+       "expect": {"state": "NORMAL", "loads": {"led": {"on": true, "duty": 1.0}, "fan": {"on": true, "duty": 1.0}, "res": {"on": false, "duty": 0.0}}}},
+      {"t_s": 1, "tod_s": 64801, "soc": 0.69, "soc_valid": true, "p_bat": -20.0, "d": {"led": true, "fan": true}, "e_done_wh": {"res": 0.0},
+       "expect": {"state": "ECONOMY", "loads": {"led": {"on": true, "duty": 1.0}, "fan": {"on": true, "duty": 0.6}, "res": {"on": true, "duty": 1.0}}}},
+      {"t_s": 2, "tod_s": 64802, "soc": 0.72, "soc_valid": true, "p_bat": 3.0, "d": {"led": true, "fan": true}, "e_done_wh": {"res": 0.01},
+       "expect": {"state": "ECONOMY", "loads": {"led": {"on": true, "duty": 1.0}, "fan": {"on": true, "duty": 0.6}, "res": {"on": true, "duty": 1.0}}}},
+      {"t_s": 400, "tod_s": 65200, "soc": 0.75, "soc_valid": true, "p_bat": 3.0, "d": {"led": true, "fan": true}, "e_done_wh": {"res": 1.8},
+       "expect": {"state": "NORMAL", "loads": {"led": {"on": true, "duty": 1.0}, "fan": {"on": true, "duty": 1.0}, "res": {"on": false, "duty": 0.0}}}},
+      {"t_s": 401, "tod_s": 65201, "soc": 0.15, "soc_valid": true, "p_bat": 3.0, "d": {"led": true, "fan": true}, "e_done_wh": {"res": 1.8},
+       "expect": {"state": "PROTECTION", "loads": {"led": {"on": false, "duty": 0.0}, "fan": {"on": false, "duty": 0.0}, "res": {"on": false, "duty": 0.0}}}},
+      {"t_s": 402, "tod_s": 65202, "soc": 0.22, "soc_valid": true, "p_bat": 3.0, "d": {"led": true, "fan": true}, "e_done_wh": {"res": 1.8},
+       "expect": {"state": "PROTECTION", "loads": {"led": {"on": false, "duty": 0.0}, "fan": {"on": false, "duty": 0.0}, "res": {"on": false, "duty": 0.0}}}},
+      {"t_s": 403, "tod_s": 65203, "soc": 0.26, "soc_valid": true, "p_bat": 3.0, "d": {"led": true, "fan": true}, "e_done_wh": {"res": 1.8},
+       "expect": {"state": "CRITICAL", "loads": {"led": {"on": true, "duty": 1.0}, "fan": {"on": false, "duty": 0.0}, "res": {"on": false, "duty": 0.0}}}},
+      {"t_s": 404, "tod_s": 65204, "soc": 0.90, "soc_valid": false, "p_bat": 3.0, "d": {"led": true, "fan": true}, "e_done_wh": {"res": 1.8},
+       "expect": {"state": "CRITICAL", "loads": {"led": {"on": true, "duty": 1.0}, "fan": {"on": false, "duty": 0.0}, "res": {"on": false, "duty": 0.0}}}}
+    ]},
+    {"name": "deslocavel_prazo_e_janela", "steps": [
+      {"t_s": 0, "tod_s": 68620, "soc": 0.75, "soc_valid": true, "p_bat": 5.0, "d": {"led": true, "fan": false}, "e_done_wh": {"res": 0.0},
+       "expect": {"state": "NORMAL", "loads": {"led": {"on": true, "duty": 1.0}, "fan": {"on": false, "duty": 0.0}, "res": {"on": true, "duty": 1.0}}}},
+      {"t_s": 10, "tod_s": 68630, "soc": 0.75, "soc_valid": true, "p_bat": 5.0, "d": {"led": true, "fan": false}, "e_done_wh": {"res": 39.9},
+       "expect": {"state": "NORMAL", "loads": {"res": {"on": true, "duty": 1.0}}}},
+      {"t_s": 20, "tod_s": 68640, "soc": 0.75, "soc_valid": true, "p_bat": 5.0, "d": {"led": true, "fan": false}, "e_done_wh": {"res": 40.0},
+       "expect": {"state": "NORMAL", "loads": {"res": {"on": false, "duty": 0.0}}}},
+      {"t_s": 30, "tod_s": 79200, "soc": 0.95, "soc_valid": true, "p_bat": 5.0, "d": {"led": true, "fan": false}, "e_done_wh": {"res": 0.0},
+       "expect": {"state": "NORMAL", "loads": {"led": {"on": true, "duty": 1.0}, "res": {"on": false, "duty": 0.0}}}}
+    ]}
+  ],
+  "soc": [
+    {"name": "descarga_carga_zona_morta", "init": {"soc": 0.5, "unc": 0.05}, "steps": [
+      {"dt_s": 3600.0, "i_a": 1.2, "v_v": 13.0, "ok": true, "expect": {"soc": 0.3, "unc": 0.062, "last_sync": "persisted", "valid": true}},
+      {"dt_s": 1800.0, "i_a": -2.0, "v_v": 13.3, "ok": true, "expect": {"soc": 0.465, "unc": 0.072, "last_sync": "persisted", "valid": true}},
+      {"dt_s": 10.0, "i_a": 0.004, "v_v": 13.2, "ok": true, "expect": {"soc": 0.465, "unc": 0.072, "last_sync": "persisted", "valid": true}}
+    ]},
+    {"name": "sincronizacao_cheio", "init": {"v_init": 13.05}, "steps": [
+      {"dt_s": 119.0, "i_a": -0.2, "v_v": 14.1, "ok": true, "expect": {"soc": 0.5010908333333333, "unc": 0.3000661111111111, "last_sync": "ocv_init", "valid": true}},
+      {"dt_s": 1.0, "i_a": -0.2, "v_v": 14.1, "ok": true, "expect": {"soc": 1.0, "unc": 0.02, "last_sync": "full", "valid": true}},
+      {"dt_s": 1.0, "i_a": -0.5, "v_v": 14.1, "ok": true, "expect": {"soc": 1.0, "unc": 0.020001388888888889, "last_sync": "full", "valid": true}}
+    ]},
+    {"name": "sincronizacao_vazio", "init": {"soc": 0.2, "unc": 0.05}, "steps": [
+      {"dt_s": 29.0, "i_a": 1.0, "v_v": 11.7, "ok": true, "expect": {"soc": 0.19865740740740742, "unc": 0.05008055555555556, "last_sync": "persisted", "valid": true}},
+      {"dt_s": 1.0, "i_a": 1.0, "v_v": 11.7, "ok": true, "expect": {"soc": 0.05, "unc": 0.02, "last_sync": "empty", "valid": true}}
+    ]},
+    {"name": "sensor_invalido", "init": {"soc": 0.6, "unc": 0.04}, "steps": [
+      {"dt_s": 1.0, "i_a": 2.0, "v_v": 13.0, "ok": false, "expect": {"soc": 0.6, "valid": true}},
+      {"dt_s": 1.0, "i_a": 2.0, "v_v": 13.0, "ok": false, "expect": {"soc": 0.6, "valid": true}},
+      {"dt_s": 1.0, "i_a": 2.0, "v_v": 13.0, "ok": false, "expect": {"soc": 0.6, "unc": 0.04, "valid": true}},
+      {"dt_s": 1.0, "i_a": 2.0, "v_v": 13.0, "ok": false, "expect": {"soc": 0.6, "valid": false}},
+      {"dt_s": 1.0, "i_a": 0.0, "v_v": 13.1, "ok": true, "expect": {"soc": 0.6, "unc": 0.09, "last_sync": "persisted", "valid": true}}
+    ]}
+  ],
+  "safety": [
+    {"name": "lvd_e_religamento", "steps": [
+      {"t_s": 0, "dt_s": 1.0, "v_bat": 11.5, "soc": 0.5, "soc_valid": true, "v_bus": 11.5, "i_bus": 1.0, "t_bat": 25.0, "expect": {"allowed": true, "code": "OK"}},
+      {"t_s": 1, "dt_s": 1.0, "v_bat": 11.5, "soc": 0.5, "soc_valid": true, "v_bus": 11.5, "i_bus": 1.0, "t_bat": 25.0, "expect": {"allowed": true, "code": "OK"}},
+      {"t_s": 2, "dt_s": 1.0, "v_bat": 11.5, "soc": 0.5, "soc_valid": true, "v_bus": 11.5, "i_bus": 1.0, "t_bat": 25.0, "expect": {"allowed": true, "code": "OK"}},
+      {"t_s": 3, "dt_s": 1.0, "v_bat": 11.5, "soc": 0.5, "soc_valid": true, "v_bus": 11.5, "i_bus": 1.0, "t_bat": 25.0, "expect": {"allowed": true, "code": "OK"}},
+      {"t_s": 4, "dt_s": 1.0, "v_bat": 11.5, "soc": 0.5, "soc_valid": true, "v_bus": 11.5, "i_bus": 1.0, "t_bat": 25.0, "expect": {"allowed": false, "code": "LVD"}},
+      {"t_s": 5, "dt_s": 1.0, "v_bat": 12.8, "soc": 0.5, "soc_valid": true, "v_bus": 12.8, "i_bus": 0.0, "t_bat": 25.0, "expect": {"allowed": false, "code": "LVD"}},
+      {"t_s": 6, "dt_s": 1.0, "v_bat": 12.95, "soc": 0.2, "soc_valid": true, "v_bus": 12.95, "i_bus": 0.0, "t_bat": 25.0, "expect": {"allowed": false, "code": "LVD"}},
+      {"t_s": 7, "dt_s": 1.0, "v_bat": 12.95, "soc": 0.3, "soc_valid": true, "v_bus": 12.95, "i_bus": 0.0, "t_bat": 25.0, "expect": {"allowed": true, "code": "OK"}}
+    ]},
+    {"name": "soc_minimo", "steps": [
+      {"t_s": 0, "dt_s": 1.0, "v_bat": 13.0, "soc": 0.09, "soc_valid": true, "v_bus": 13.0, "i_bus": 1.0, "t_bat": 25.0, "expect": {"allowed": false, "code": "LVD"}},
+      {"t_s": 1, "dt_s": 1.0, "v_bat": 13.0, "soc": 0.05, "soc_valid": false, "v_bus": 13.0, "i_bus": 1.0, "t_bat": 25.0, "expect": {"allowed": true, "code": "OK"}}
+    ]},
+    {"name": "sobretensao_barramento", "steps": [
+      {"t_s": 0.0, "dt_s": 0.5, "v_bat": 13.0, "soc": 0.5, "soc_valid": true, "v_bus": 15.2, "i_bus": 1.0, "t_bat": 25.0, "expect": {"allowed": true, "code": "OK"}},
+      {"t_s": 0.5, "dt_s": 0.5, "v_bat": 13.0, "soc": 0.5, "soc_valid": true, "v_bus": 15.2, "i_bus": 1.0, "t_bat": 25.0, "expect": {"allowed": false, "code": "OVP"}},
+      {"t_s": 1.0, "dt_s": 0.5, "v_bat": 13.0, "soc": 0.5, "soc_valid": true, "v_bus": 14.8, "i_bus": 0.0, "t_bat": 25.0, "expect": {"allowed": false, "code": "OVP"}},
+      {"t_s": 1.5, "dt_s": 0.5, "v_bat": 13.0, "soc": 0.5, "soc_valid": true, "v_bus": 14.5, "i_bus": 0.0, "t_bat": 25.0, "expect": {"allowed": false, "code": "OVP"}},
+      {"t_s": 2.0, "dt_s": 0.5, "v_bat": 13.0, "soc": 0.5, "soc_valid": true, "v_bus": 14.5, "i_bus": 0.0, "t_bat": 25.0, "expect": {"allowed": true, "code": "OK"}}
+    ]},
+    {"name": "sobrecorrente_tentativas_bloqueio", "steps": [
+      {"t_s": 0.0, "dt_s": 0.1, "v_bat": 13.0, "soc": 0.5, "soc_valid": true, "v_bus": 13.0, "i_bus": 5.0, "t_bat": 25.0, "expect": {"allowed": true, "code": "OK"}},
+      {"t_s": 0.1, "dt_s": 0.1, "v_bat": 13.0, "soc": 0.5, "soc_valid": true, "v_bus": 13.0, "i_bus": 5.0, "t_bat": 25.0, "expect": {"allowed": false, "code": "OC"}},
+      {"t_s": 29.6, "dt_s": 29.5, "v_bat": 13.0, "soc": 0.5, "soc_valid": true, "v_bus": 13.0, "i_bus": 0.0, "t_bat": 25.0, "expect": {"allowed": false, "code": "OC"}},
+      {"t_s": 30.1, "dt_s": 0.5, "v_bat": 13.0, "soc": 0.5, "soc_valid": true, "v_bus": 13.0, "i_bus": 0.0, "t_bat": 25.0, "expect": {"allowed": true, "code": "OK"}},
+      {"t_s": 30.2, "dt_s": 0.1, "v_bat": 13.0, "soc": 0.5, "soc_valid": true, "v_bus": 13.0, "i_bus": 5.0, "t_bat": 25.0, "expect": {"allowed": true, "code": "OK"}},
+      {"t_s": 30.3, "dt_s": 0.1, "v_bat": 13.0, "soc": 0.5, "soc_valid": true, "v_bus": 13.0, "i_bus": 5.0, "t_bat": 25.0, "expect": {"allowed": false, "code": "OC"}},
+      {"t_s": 60.3, "dt_s": 30.0, "v_bat": 13.0, "soc": 0.5, "soc_valid": true, "v_bus": 13.0, "i_bus": 0.0, "t_bat": 25.0, "expect": {"allowed": true, "code": "OK"}},
+      {"t_s": 60.4, "dt_s": 0.1, "v_bat": 13.0, "soc": 0.5, "soc_valid": true, "v_bus": 13.0, "i_bus": 5.0, "t_bat": 25.0, "expect": {"allowed": true, "code": "OK"}},
+      {"t_s": 60.5, "dt_s": 0.1, "v_bat": 13.0, "soc": 0.5, "soc_valid": true, "v_bus": 13.0, "i_bus": 5.0, "t_bat": 25.0, "expect": {"allowed": false, "code": "OC_LOCKOUT"}},
+      {"t_s": 700.0, "dt_s": 639.5, "v_bat": 13.0, "soc": 0.5, "soc_valid": true, "v_bus": 13.0, "i_bus": 0.0, "t_bat": 25.0, "expect": {"allowed": false, "code": "OC_LOCKOUT"}},
+      {"t_s": 700.1, "dt_s": 0.1, "reset_faults": true, "v_bat": 13.0, "soc": 0.5, "soc_valid": true, "v_bus": 13.0, "i_bus": 0.0, "t_bat": 25.0, "expect": {"allowed": true, "code": "OK"}}
+    ]},
+    {"name": "sobretemperatura", "steps": [
+      {"t_s": 0, "dt_s": 1.0, "v_bat": 13.0, "soc": 0.5, "soc_valid": true, "v_bus": 13.0, "i_bus": 1.0, "t_bat": 56.0, "expect": {"allowed": false, "code": "OT"}},
+      {"t_s": 1, "dt_s": 1.0, "v_bat": 13.0, "soc": 0.5, "soc_valid": true, "v_bus": 13.0, "i_bus": 1.0, "t_bat": 50.0, "expect": {"allowed": false, "code": "OT"}},
+      {"t_s": 2, "dt_s": 1.0, "v_bat": 13.0, "soc": 0.5, "soc_valid": true, "v_bus": 13.0, "i_bus": 1.0, "t_bat": null, "expect": {"allowed": false, "code": "OT"}},
+      {"t_s": 3, "dt_s": 1.0, "v_bat": 13.0, "soc": 0.5, "soc_valid": true, "v_bus": 13.0, "i_bus": 1.0, "t_bat": 44.0, "expect": {"allowed": true, "code": "OK"}}
+    ]},
+    {"name": "sensores_invalidos", "steps": [
+      {"t_s": 1, "dt_s": 1.0, "v_bat": null, "soc": 0.5, "soc_valid": true, "v_bus": null, "i_bus": null, "t_bat": 25.0, "expect": {"allowed": true, "code": "OK"}},
+      {"t_s": 2, "dt_s": 1.0, "v_bat": null, "soc": 0.5, "soc_valid": true, "v_bus": null, "i_bus": null, "t_bat": 25.0, "expect": {"allowed": true, "code": "OK"}},
+      {"t_s": 3, "dt_s": 1.0, "v_bat": null, "soc": 0.5, "soc_valid": true, "v_bus": null, "i_bus": null, "t_bat": 25.0, "expect": {"allowed": true, "code": "OK"}},
+      {"t_s": 4, "dt_s": 1.0, "v_bat": null, "soc": 0.5, "soc_valid": true, "v_bus": null, "i_bus": null, "t_bat": 25.0, "expect": {"allowed": false, "code": "SENSOR"}},
+      {"t_s": 5, "dt_s": 1.0, "v_bat": null, "soc": 0.5, "soc_valid": true, "v_bus": 13.0, "i_bus": 1.0, "t_bat": 25.0, "expect": {"allowed": true, "code": "OK"}}
+    ]},
+    {"name": "prioridade_ot_sobre_lvd", "steps": [
+      {"t_s": 0, "dt_s": 5.0, "v_bat": 11.0, "soc": 0.5, "soc_valid": true, "v_bus": 11.0, "i_bus": 1.0, "t_bat": 60.0, "expect": {"allowed": false, "code": "OT"}}
+    ]}
+  ]
+}

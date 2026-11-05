@@ -133,6 +133,15 @@ class BatteryModel:
             return i_lim
         return max(0.0, i_lim * (1.0 - s) / (1.0 - ts))
 
+    def charge_limit_a(self, dt_s: float, t_bat_c: float | None = None) -> float:
+        """Corrente de carga máxima no passo: aceitação CC-CV e não ultrapassar SOC 1 em ``dt_s``."""
+        i_acc = self.charge_acceptance_a(t_bat_c=t_bat_c)
+        if dt_s > 0:
+            cap_as = self.params.capacity_ah * 3600.0
+            i_room = (1.0 - self.soc) * cap_as / (self.params.coulombic_efficiency * dt_s)
+            i_acc = min(i_acc, i_room)
+        return max(0.0, i_acc)
+
     # ------------------------------------------------------------ solução
     def current_for_power(self, p_w: float, ocv: float | None = None) -> float | None:
         """Resolve ``V·I = P`` com ``V = OCV − I·R``; retorna I (A, + descarga) ou None se impossível."""
@@ -155,11 +164,7 @@ class BatteryModel:
         r = self.params.r_internal_ohm
         if p_surplus_w <= 0.0:
             return BatteryOperatingPoint(0.0, e, 0.0, e, "idle")
-        i_acc = self.charge_acceptance_a(t_bat_c=t_bat_c)
-        # não ultrapassar SOC 1 no passo (relevante para dt grandes)
-        cap_as = self.params.capacity_ah * 3600.0
-        i_room = (1.0 - self.soc) * cap_as / (self.params.coulombic_efficiency * dt_s) if dt_s > 0 else i_acc
-        i_acc = max(0.0, min(i_acc, i_room))
+        i_acc = self.charge_limit_a(dt_s, t_bat_c)
         i_free = -(self.current_for_power(-p_surplus_w, e) or 0.0)  # magnitude sem limite
         if i_free <= i_acc:
             v = e + i_free * r

@@ -101,9 +101,12 @@ void format_local_day(int64_t ts_ms, int32_t utc_offset_s, char* out, int out_le
 }
 
 double seconds_until(double tod_s, int32_t deadline_s) {
-  double r = static_cast<double>(deadline_s) - tod_s;
-  if (r < 0.0) r += kDaySeconds;
-  return r;
+  // Mesma fórmula de smartenergy.ems.rules.seconds_until (tod reduzido módulo 24 h;
+  // tod == alvo => 24 h).
+  double t = std::fmod(tod_s, kDaySeconds);
+  if (t < 0.0) t += kDaySeconds;
+  const double target = static_cast<double>(deadline_s);
+  return target > t ? target - t : target + kDaySeconds - t;
 }
 
 }  // namespace sem

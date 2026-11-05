@@ -38,6 +38,7 @@ enum class EventCode : uint8_t {
   CmdRejected,
   PlanExpired,
   FaultsReset,
+  OcRetry,  // extensão: nova tentativa após OC (mesmo código do espelho Python)
   Count_
 };
 

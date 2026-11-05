@@ -13,7 +13,7 @@ constexpr const char* kEventNames[] = {
     "BOOT",       "TIME_SYNC", "WIFI_UP",   "WIFI_DOWN",     "MQTT_UP",        "MQTT_DOWN",
     "SENSOR_FAIL", "SENSOR_OK", "LVD_TRIP",  "LVD_CLEAR",     "OVP_TRIP",       "OVP_CLEAR",
     "OC_TRIP",    "OC_LOCKOUT", "OT_TRIP",   "OT_CLEAR",      "SOC_SYNC_FULL",  "SOC_SYNC_EMPTY",
-    "MODE_CHANGE", "CMD_REJECTED", "PLAN_EXPIRED", "FAULTS_RESET",
+    "MODE_CHANGE", "CMD_REJECTED", "PLAN_EXPIRED", "FAULTS_RESET", "OC_RETRY",
 };
 static_assert(sizeof(kEventNames) / sizeof(kEventNames[0]) == static_cast<size_t>(EventCode::Count_),
               "tabela de nomes de eventos desatualizada");

@@ -5,16 +5,17 @@
 //
 // Convenção: corrente I POSITIVA = DESCARGA.
 //
-// Detalhes de implementação fixados aqui (o texto normativo é omisso):
-//   * Amostra com sensor inválido: nenhuma integração e nenhuma alteração nos
-//     temporizadores de sincronização (t_full/t_empty ficam congelados); apenas
+// Detalhes de implementação (texto normativo omisso) — idênticos ao espelho
+// Python (backend/smartenergy/estimation/soc.py):
+//   * Amostra com sensor inválido: nenhuma integração; t_full/t_empty zeram;
 //     o tempo de invalidez é acumulado (t_inv += dt). Se t_inv > sensor_timeout_s
 //     => valid = false.
 //   * Na primeira amostra válida após valid == false: valid = true,
-//     unc_base += invalid_unc_penalty (0,05) e a amostra é processada normalmente.
+//     unc_base = min(0,5, unc_base + 0,05) e a amostra é processada normalmente.
+//   * since_sync_s só avança em amostras válidas.
 //   * sync_manual(): além do especificado (soc, unc_base, last_sync), zera
 //     ah_since_sync (a incerteza de deriva conta desde a última sincronização).
-//   * Eventos SOC_SYNC_FULL / SOC_SYNC_EMPTY apenas na borda (entrada na condição).
+//   * Eventos SOC_SYNC_FULL / SOC_SYNC_EMPTY apenas na borda.
 // =============================================================================
 #pragma once
 

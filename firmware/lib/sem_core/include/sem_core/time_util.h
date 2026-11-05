@@ -40,7 +40,7 @@ int32_t days_from_civil(int32_t year, uint32_t month, uint32_t day);
 /// Dia local "AAAA-MM-DD" (out com pelo menos 11 bytes).
 void format_local_day(int64_t ts_ms, int32_t utc_offset_s, char* out, int out_len);
 
-/// Tempo restante até 'deadline_s' a partir de 'tod_s', em [0, 86400).
+/// Tempo até o próximo 'deadline_s' a partir de 'tod_s', em (0, 86400] (igual ao Python).
 double seconds_until(double tod_s, int32_t deadline_s);
 
 }  // namespace sem
