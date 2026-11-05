@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sem.telemetry.v1",
+  "title": "Smart Energy Manager - telemetria (snapshot)",
+  "type": "object",
+  "required": ["schema", "device_id", "source", "boot_id", "seq", "ts_ms", "time_synced", "uptime_ms",
+               "window_ms", "n_samples", "units", "meas", "energy", "soc", "loads", "ems", "faults"],
+  "properties": {
+    "schema": {"const": "sem.telemetry.v1"},
+    "device_id": {"type": "string", "minLength": 1},
+    "fw_version": {"type": "string"},
+    "source": {"enum": ["hardware", "simulation"]},
+    "boot_id": {"type": "integer", "minimum": 0},
+    "seq": {"type": "integer", "minimum": 0},
+    "ts_ms": {"type": "integer", "minimum": 0},
+    "time_synced": {"type": "boolean"},
+    "uptime_ms": {"type": "integer", "minimum": 0},
+    "window_ms": {"type": "integer", "minimum": 0},
+    "n_samples": {"type": "integer", "minimum": 0},
+    "units": {
+      "type": "object",
+      "required": ["v", "i", "p", "e", "t", "soc", "duty"],
+      "properties": {
+        "v": {"const": "V"}, "i": {"const": "A"}, "p": {"const": "W"}, "e": {"const": "Wh"},
+        "t": {"const": "degC"}, "soc": {"const": "1"}, "duty": {"const": "1"}
+      }
+    },
+    "meas": {
+      "type": "object",
+      "required": ["pv", "bat", "bus"],
+      "properties": {
+        "pv": {"$ref": "#/$defs/vip"},
+        "bat": {"$ref": "#/$defs/vip"},
+        "bus": {"$ref": "#/$defs/vip"},
+        "t_pv": {"$ref": "#/$defs/temp"},
+        "t_bat": {"$ref": "#/$defs/temp"},
+        "irr": {
+          "type": "object", "required": ["g", "ok"],
+          "properties": {"g": {"type": ["number", "null"]}, "ok": {"type": "boolean"}}
+        }
+      }
+    },
+    "energy": {
+      "type": "object",
+      "required": ["day", "pv_in", "bat_chg", "bat_dis", "load", "unserved"],
+      "properties": {
+        "day": {"type": ["string", "null"], "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+        "pv_in": {"type": "number", "minimum": 0},
+        "bat_chg": {"type": "number", "minimum": 0},
+        "bat_dis": {"type": "number", "minimum": 0},
+        "load": {"type": "number", "minimum": 0},
+        "unserved": {"type": "number", "minimum": 0}
+      }
+    },
+    "soc": {
+      "type": "object",
+      "required": ["value", "unc", "valid", "last_sync", "since_sync_s"],
+      "properties": {
+        "value": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "unc": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "valid": {"type": "boolean"},
+        "last_sync": {"enum": ["none", "ocv_init", "persisted", "full", "empty", "manual"]},
+        "since_sync_s": {"type": ["number", "null"], "minimum": 0}
+      }
+    },
+    "loads": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "key", "prio", "demand", "on", "duty", "p", "p_src", "fault"],
+        "properties": {
+          "id": {"type": "integer", "minimum": 1},
+          "key": {"type": "string"},
+          "prio": {"enum": ["high", "medium", "low"]},
+          "demand": {"type": "boolean"},
+          "on": {"type": "boolean"},
+          "duty": {"type": "number", "minimum": 0, "maximum": 1},
+          "p": {"type": ["number", "null"], "minimum": 0},
+          "p_src": {"enum": ["measured", "estimated"]},
+          "fault": {"type": "boolean"},
+          "deferrable": {
+            "type": "object",
+            "required": ["e_req_wh", "e_done_wh", "window_start", "deadline"],
+            "properties": {
+              "e_req_wh": {"type": "number", "minimum": 0},
+              "e_done_wh": {"type": "number", "minimum": 0},
+              "window_start": {"type": "string", "pattern": "^[0-9]{2}:[0-9]{2}$"},
+              "deadline": {"type": "string", "pattern": "^[0-9]{2}:[0-9]{2}$"}
+            }
+          }
+        }
+      }
+    },
+    "ems": {
+      "type": "object",
+      "required": ["mode", "state", "safety", "fallback", "cmd_age_s"],
+      "properties": {
+        "mode": {"enum": ["conventional", "rules", "predictive"]},
+        "state": {"enum": ["NORMAL", "ECONOMY", "CRITICAL", "PROTECTION"]},
+        "safety": {"enum": ["OK", "BOOT", "LVD", "OVP", "OC", "OC_LOCKOUT", "OT", "SENSOR"]},
+        "fallback": {"type": "boolean"},
+        "cmd_age_s": {"type": ["number", "null"], "minimum": 0}
+      }
+    },
+    "faults": {"type": "array", "items": {"type": "string"}},
+    "sim": {"type": "object"}
+  },
+  "$defs": {
+    "vip": {
+      "type": "object",
+      "required": ["v", "i", "p", "ok"],
+      "properties": {
+        "v": {"type": ["number", "null"]},
+        "i": {"type": ["number", "null"]},
+        "p": {"type": ["number", "null"]},
+        "ok": {"type": "boolean"}
+      }
+    },
+    "temp": {
+      "type": "object",
+      "required": ["t", "ok"],
+      "properties": {"t": {"type": ["number", "null"]}, "ok": {"type": "boolean"}}
+    }
+  }
+}

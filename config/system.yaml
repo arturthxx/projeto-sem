@@ -1,0 +1,287 @@
+# =============================================================================
+# SMART ENERGY MANAGER — Parâmetros do sistema (FONTE ÚNICA DE VERDADE)
+# =============================================================================
+# Este arquivo é lido por:
+#   * backend Python (smartenergy.config.load_config)  -> simulação, EMS, API
+#   * tools/gen_firmware_params.py -> gera firmware/include/system_params.h
+# Qualquer alteração aqui deve ser seguida de:
+#   python tools/gen_firmware_params.py   (e recompilação do firmware)
+#
+# Convenções:
+#   * Unidades SI no nome da chave (_v, _a, _w, _wh, _s, _c, _deg ...).
+#   * SOC em fração (0..1).
+#   * Corrente da bateria POSITIVA = DESCARGA (convenção do documento-base, seção 6.2).
+#   * Horários em hora LOCAL (America/Sao_Paulo, UTC-3, sem horário de verão).
+#   * "PENDENTE": valor de referência que DEVE ser confirmado no datasheet do
+#     componente efetivamente adquirido ou por medição (Experimentos 1–3).
+# =============================================================================
+schema_version: 1
+
+project:
+  name: "Smart Energy Manager"
+  device_id: "sem-esp32-01"
+  firmware_version: "0.1.0"
+
+site:
+  name: "UTFPR - Campus Cornelio Procopio (PR)"
+  latitude_deg: -23.18        # PENDENTE: coordenadas exatas da bancada
+  longitude_deg: -50.65       # PENDENTE
+  timezone: "America/Sao_Paulo"
+  utc_offset_h: -3
+
+# -----------------------------------------------------------------------------
+# Gerador fotovoltaico (modulo de 36 celulas, "12 V nominal")
+# -----------------------------------------------------------------------------
+pv:
+  p_stc_w: 50.0
+  vmp_v: 18.0                 # PENDENTE datasheet
+  imp_a: 2.78                 # PENDENTE datasheet
+  voc_v: 21.6                 # PENDENTE datasheet (deve ser < 36 V do INA226 e < Voc max do MPPT)
+  isc_a: 3.05                 # PENDENTE datasheet
+  gamma_pmp_per_c: -0.0040    # coef. de temperatura de Pmax (1/°C) — PENDENTE
+  beta_voc_per_c: -0.0030     # coef. de temperatura de Voc (1/°C) — PENDENTE
+  noct_c: 45.0                # PENDENTE
+  tilt_deg: 23.0              # ~ latitude
+  azimuth_deg: 0.0            # 0 = voltado para o Norte geografico (hemisferio Sul)
+  derate: 0.93                # sujeira + mismatch + cabos + tolerancia (adimensional)
+
+# -----------------------------------------------------------------------------
+# Controlador de carga MPPT comercial (o EMS NAO controla o rastreamento)
+# -----------------------------------------------------------------------------
+mppt:
+  reference_model: "Victron SmartSolar MPPT 75/10"
+  alternative_model: "EPEver Tracer 1210AN"
+  efficiency: 0.95            # rastreamento + conversao, valor medio — PENDENTE (curva real depende da potencia)
+  self_consumption_w: 0.3     # PENDENTE datasheet
+  max_charge_current_a: 3.0   # LIMITE CONFIGURADO no controlador (0,5C da bateria de 6 Ah)
+  absorption_v: 14.2          # PENDENTE (recomendacao do fabricante da bateria)
+  float_v: 13.5               # PENDENTE
+
+# -----------------------------------------------------------------------------
+# Bateria LiFePO4 4S com BMS integrado
+# -----------------------------------------------------------------------------
+battery:
+  chemistry: "LiFePO4"
+  series_cells: 4
+  nominal_v: 12.8
+  capacity_ah: 6.0            # capacidade nominal; a efetiva deve ser medida (Experimento 3)
+  coulombic_efficiency: 0.99  # PENDENTE (tipico LiFePO4)
+  r_internal_ohm: 0.04        # pack, PENDENTE (medir por degrau de corrente)
+  max_charge_current_a: 3.0   # PENDENTE datasheet/BMS (0,5C)
+  max_discharge_current_a: 6.0  # PENDENTE datasheet/BMS (1C)
+  bms_ovp_v: 14.6             # PENDENTE (3,65 V/celula)
+  bms_uvp_v: 10.0             # PENDENTE (2,5 V/celula)
+  charge_min_temp_c: 0.0      # LiFePO4 nao deve ser carregada abaixo de 0 °C
+  # Curva OCV x SOC TIPICA em repouso a 25 °C (literatura/fabricantes).
+  # NAO usar para estimativa precisa de SOC: o patamar 20–90 % e muito plano.
+  # Usada apenas no simulador e para inicializacao de baixa confianca.
+  ocv_curve:
+    soc: [0.00, 0.05, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 0.95, 0.99, 1.00]
+    v:   [10.00, 11.60, 12.00, 12.80, 12.95, 13.00, 13.05, 13.10, 13.15, 13.20, 13.30, 13.35, 13.45, 13.60]
+
+# -----------------------------------------------------------------------------
+# Estimador de SOC (contagem de Coulomb + sincronizacoes) — firmware e simulador
+# -----------------------------------------------------------------------------
+soc_estimator:
+  current_deadband_a: 0.005
+  full_sync:                  # bateria cheia: V alta e corrente de carga baixa (fase de absorcao)
+    voltage_v: 14.0
+    tail_current_a: 0.30      # 0,05C
+    hold_s: 120
+  empty_sync:                 # tensao compensada V + I*R_int baixa -> SOC limitado superiormente
+    voltage_v: 11.8
+    hold_s: 30
+    soc_value: 0.05
+  unknown_initial_uncertainty: 0.30
+  sync_uncertainty: 0.02
+  drift_uncertainty_per_ah: 0.01   # +1 p.p. por Ah integrado desde a ultima sincronizacao (conservador)
+  persist_every_s: 600
+  persist_delta_soc: 0.02
+
+# -----------------------------------------------------------------------------
+# Supervisor de seguranca LOCAL (firmware) — ativo em TODOS os modos.
+# Nao substitui BMS, fusiveis nem as protecoes do controlador.
+# -----------------------------------------------------------------------------
+safety:
+  lvd_v: 11.6                 # desconexao por subtensao (bateria)
+  lvd_delay_s: 5
+  soc_hard_min: 0.10          # desconexao por SOC estimado
+  reconnect_v: 12.9           # religamento exige V >= reconnect_v ...
+  reconnect_min_soc: 0.25     # ... e SOC >= reconnect_min_soc
+  bus_ovp_v: 15.0             # sobretensao no barramento (ex.: BMS abriu durante carga)
+  bus_ovp_delay_s: 1
+  bus_overcurrent_a: 4.0
+  bus_overcurrent_delay_ms: 200
+  overcurrent_retry_s: 30
+  overcurrent_max_retries: 3  # depois disso: bloqueio ate reset manual
+  battery_overtemp_c: 55.0
+  battery_overtemp_release_c: 45.0
+  sensor_timeout_s: 3
+  boot_settle_samples: 20     # amostras validas antes de habilitar qualquer carga
+
+# -----------------------------------------------------------------------------
+# Cargas experimentais (12 V CC, chaveamento low-side por MOSFET)
+# priority: high | medium | low
+# -----------------------------------------------------------------------------
+loads:
+  - id: 1
+    key: "led"
+    name: "Iluminacao LED 12 V"
+    priority: "high"
+    p_nom_w: 5.0              # na tensao v_ref_v — PENDENTE (medir, Experimento 2)
+    v_ref_v: 12.8
+    voltage_exponent: 1.5     # P(V) = p_nom * (V / v_ref) ^ k  (aproximacao)
+    dimmable: false
+    i_max_a: 0.6
+    gpio: 25
+    fuse_a: 2.0
+  - id: 2
+    key: "fan"
+    name: "Ventilador CC 12 V"
+    priority: "medium"
+    p_nom_w: 6.0              # PENDENTE
+    v_ref_v: 12.8
+    voltage_exponent: 1.5
+    dimmable: true            # reducao por PWM de baixa frequencia
+    min_duty: 0.40            # abaixo disso o ventilador pode estolar — PENDENTE validar
+    pwm_freq_hz: 100
+    i_max_a: 0.8
+    gpio: 26
+    fuse_a: 2.0
+  - id: 3
+    key: "res"
+    name: "Carga resistiva 10 ohm (simula bombeamento/aquecimento - deslocavel)"
+    priority: "low"
+    p_nom_w: 16.4             # 12,8^2 / 10
+    v_ref_v: 12.8
+    voltage_exponent: 2.0
+    dimmable: false
+    i_max_a: 1.6
+    gpio: 27
+    fuse_a: 3.0
+    deferrable:
+      daily_energy_wh: 40.0   # energia que precisa ser entregue por dia
+      window_start: "07:00"
+      deadline: "22:00"
+
+aux:
+  p_w: 0.8                    # ESP32 (Wi-Fi) + conversor CC-CC + sensores — PENDENTE medir
+  measured: false
+
+# -----------------------------------------------------------------------------
+# Perfil de demanda programado (reprodutivel) — horarios locais [inicio, fim)
+# -----------------------------------------------------------------------------
+demand:
+  profile_name: "residencial_lab_v1"
+  schedule:
+    led: [["05:30", "07:00"], ["18:00", "23:00"]]
+    fan: [["12:00", "17:00"], ["19:00", "23:00"]]
+  conventional:
+    res_schedule: [["18:00", "22:00"]]   # operacao convencional: liga as 18h ate cumprir a energia diaria
+
+# -----------------------------------------------------------------------------
+# Gerenciamento energetico (EMS)
+# -----------------------------------------------------------------------------
+ems:
+  default_mode: "rules"       # conventional | rules | predictive
+  rules:
+    normal_min_soc: 0.70
+    economy_min_soc: 0.40
+    critical_min_soc: 0.20    # = SOC minimo operacional
+    hysteresis_soc: 0.05
+    economy_medium_duty: 0.60
+    min_dwell_s: 300
+    deferrable:
+      surplus_on_soc: 0.90
+      surplus_off_soc: 0.80
+      economy_surplus_margin_w: 2.0
+      deadline_margin_s: 1800
+  predictive:
+    step_s: 900
+    horizon_steps: 96         # 24 h
+    replan_s: 900
+    command_ttl_s: 1200
+    solver: "HiGHS"
+    time_limit_s: 10
+    mip_gap: 0.01
+    soc_min: 0.20
+    soc_max: 1.00
+    weights:                  # J = sum(alpha_p*E_nao_atendida_p) + beta*E_curt + gamma*E_bat + delta*N_com - lambda*E_final
+      unserved_high: 20.0     # por Wh
+      unserved_medium: 4.0    # por Wh
+      unserved_low: 2.0       # por Wh de deficit da carga deslocavel no prazo
+      curtailment: 0.1        # por Wh
+      battery_throughput: 0.02  # por Wh (carga + descarga)
+      switching: 0.5          # por comutacao
+      terminal_energy_value: 1.5  # por Wh armazenado ao fim do horizonte
+      soc_min_violation: 50.0 # por Wh abaixo de soc_min (restricao suave)
+
+# -----------------------------------------------------------------------------
+# Previsao
+# -----------------------------------------------------------------------------
+forecast:
+  pv_method: "clearsky_persistence"   # perfect (so simulacao) | noisy | clearsky_persistence | open_meteo
+  noisy:
+    rel_rmse: 0.20
+    ar1_phi: 0.9
+  clearsky_persistence:
+    window_s: 3600
+    blend_tau_h: 3.0
+    climatology_k: 0.70
+  demand_method: "schedule"           # schedule (perfil programado) | historical_mean
+
+# -----------------------------------------------------------------------------
+# Comunicacao
+# -----------------------------------------------------------------------------
+comm:
+  mqtt_prefix: "smartenergy"
+  telemetry_period_s: 5
+  sample_period_ms: 100
+  ems_period_ms: 1000
+  command_hmac: true
+  command_max_skew_s: 120
+  command_id_cache: 16
+
+# -----------------------------------------------------------------------------
+# Hardware: enderecos e pinos (ver docs/04-mapa-de-pinos.md)
+# -----------------------------------------------------------------------------
+hardware:
+  i2c_sda: 21
+  i2c_scl: 22
+  i2c_hz: 100000
+  onewire_pin: 4
+  status_led_pin: 2
+  ina_alert_pin: 34           # entrada apenas; pull-up externo 10 k
+  button_pin: 35              # entrada apenas; pull-up externo 10 k (reset de falhas)
+  uart_mppt_rx: 16            # VE.Direct / RS-485 (opcional)
+  uart_mppt_tx: 17
+  ina226:
+    pv:   {address: 0x40, shunt_ohm: 0.010, max_current_a: 5.0, sign: 1}
+    bat:  {address: 0x41, shunt_ohm: 0.010, max_current_a: 8.0, sign: 1}   # IN+ lado bateria -> descarga positiva
+    bus:  {address: 0x44, shunt_ohm: 0.010, max_current_a: 5.0, sign: 1}
+  rtc_ds3231_address: 0x68
+
+# -----------------------------------------------------------------------------
+# Simulacao (dados SEMPRE marcados como simulados)
+# -----------------------------------------------------------------------------
+simulation:
+  dt_s: 60
+  start_date: "2026-11-16"
+  initial_soc: 0.60
+  initial_soc_estimate_error: 0.0   # erro inicial do estimador (estimado = verdadeiro + erro)
+  seeds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  sensor_error:                     # erros sistematicos aplicados as medicoes simuladas
+    current_gain: 0.005             # +0,5 % (tolerancia do shunt + ganho do INA226)
+    current_offset_a: 0.002
+    voltage_gain: 0.001
+    noise_std_current_a: 0.005
+  weather:
+    t_amb_min_c: 19.0         # PENDENTE (climatologia de novembro)
+    t_amb_max_c: 31.0
+    t_min_hour: 6.0
+    t_max_hour: 15.0
+  scenarios:
+    ensolarado:            {regime: "clear",    days: 3}
+    parcialmente_nublado:  {regime: "partly",   days: 3}
+    nublado:               {regime: "overcast", days: 3}
+    semana_variavel:       {regime: "markov",   days: 7}

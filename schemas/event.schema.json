@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sem.event.v1",
+  "type": "object",
+  "required": ["schema", "ts_ms", "source", "level", "code", "msg"],
+  "properties": {
+    "schema": {"const": "sem.event.v1"},
+    "ts_ms": {"type": "integer", "minimum": 0},
+    "source": {"enum": ["hardware", "simulation"]},
+    "level": {"enum": ["info", "warn", "error", "critical"]},
+    "code": {"type": "string", "pattern": "^[A-Z_]+$"},
+    "msg": {"type": "string"},
+    "data": {"type": "object"}
+  }
+}

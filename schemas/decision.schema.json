@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sem.decision.v1",
+  "type": "object",
+  "required": ["schema", "ts_ms", "source", "origin", "mode", "state", "safety", "reason", "actions", "inputs"],
+  "properties": {
+    "schema": {"const": "sem.decision.v1"},
+    "ts_ms": {"type": "integer", "minimum": 0},
+    "source": {"enum": ["hardware", "simulation"]},
+    "origin": {"enum": ["firmware", "backend"]},
+    "mode": {"enum": ["conventional", "rules", "predictive"]},
+    "state": {"enum": ["NORMAL", "ECONOMY", "CRITICAL", "PROTECTION"]},
+    "prev_state": {"enum": ["NORMAL", "ECONOMY", "CRITICAL", "PROTECTION", null]},
+    "safety": {"enum": ["OK", "BOOT", "LVD", "OVP", "OC", "OC_LOCKOUT", "OT", "SENSOR"]},
+    "reason": {"type": "string"},
+    "actions": {"type": "array", "items": {"type": "object", "required": ["id", "on", "duty"],
+      "properties": {"id": {"type": "integer"}, "on": {"type": "boolean"}, "duty": {"type": "number", "minimum": 0, "maximum": 1}}}},
+    "inputs": {"type": "object"},
+    "plan": {"type": ["object", "null"]}
+  }
+}
